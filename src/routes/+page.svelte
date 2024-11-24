@@ -16,5 +16,3 @@
 <div class="flex flex-col items-center"> 
   <Logo class="w-8/12 mt-10"></Logo>
 </div>
-
-
