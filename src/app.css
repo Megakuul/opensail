@@ -2,6 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+:root {
+  --primary-bg-color: #592986;
+  --secondary-bg-color: black;
+}
+
 html::-webkit-scrollbar, body::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
@@ -13,5 +18,8 @@ html, body {
   font-family: "Ubuntu", "Roboto";
 }
 body {
-  @apply bg-slate-800;
+  background-image: linear-gradient(to top right, var(--secondary-bg-color), var(--primary-bg-color));
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
 }

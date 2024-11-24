@@ -1,7 +1,7 @@
 <script>
-    import Logo from "$lib/components/Logo.svelte";
-
+  import Logo from "$lib/components/Logo.svelte";
 </script>
+
 <svelte:head>
 	<title>Opensail</title>
 	<meta name="description" content="Free and Opensource sailing platform." />
@@ -14,8 +14,7 @@
 </svelte:head>
 
 <div class="flex flex-col items-center"> 
-  <Logo class="w-1/2"></Logo>
-  <h1>Join the Opensail Community</h1>
+  <Logo class="w-8/12 mt-10"></Logo>
 </div>
 
 

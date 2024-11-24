@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@megakuul/adapter-battleshiper';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
