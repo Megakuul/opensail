@@ -1,17 +1,61 @@
 {
   "SUI 282": {
-    "name": "",
+    "owner": "",
     "team": "",
-    "boat_owner": "",
-    "boat_class": "",
-    "rating": {
-      "swiss_yardstick": "",
-      "open_tcc": "",
-      "orc_tcc": "",
-      "irc_tcc": ""
-    } ,
-    "specification": {
-
+    "boat_info": {
+      "source": "",
+      "name": "",
+      "class": "",
+      "family": "",
+      "age": "",
+      "builder": "",
+      "designer": "",
+      "certificate_type": "",
+      "certificate_issue_date": ""
+    },
+    "boat_spec": {
+      "source": "",
+      "dimension": {
+        "length_over_all": "",
+        "draft": "",
+        "beam": "",
+        "forestray_height": "",
+        "wetted_surface_area": ""
+      },
+      "sail_area": {
+        "main": "",
+        "jib": "",
+        "asymmetric_spinnaker": "",
+        "symmetric_spinnaker": ""
+      },
+      "misc": {
+        "stability_index": "",
+        "sailing_displacement": "",
+        "measured_displacement": "",
+        "max_crew_weight": ""
+      }
+    },
+    "boat_rating": {
+      "os": {
+        "source": "",
+        "value": "",
+        "tcc": 1
+      },
+      "swiss_yardstick": {
+        "source": "",
+        "value": "",
+        "tcc": 1
+      },
+      "orc": {
+        "source": "",
+        "value": "",
+        "tcc": 1
+      },
+      "irc": {
+        "source": "",
+        "value": "",
+        "tcc": 1
+      }
     }
   }
 }

@@ -1,0 +1,20 @@
+# Ship identifier issued by the national sailing authority in format <national_code>_<unique_identifier>.
+id = "sui_example"
+# Specifies all users that are capable of submitting changes to the ship (specified as github email address). 
+owners = [""]
+# Specifies the team identifier of the team currently sailing this boat.
+team = "example"
+
+# Info defines general information about the boat. This information does not influence rating.
+[info]
+# Boat information data source [manual = configured in ./info.toml; orc = pulled from orc database with specified 'orc_sailing_no']
+source = "manual"
+# Boat identifier when pulled from 'orc' source. This reflects the orc database 'SailNo'. 
+orc_sailing_no = ""
+
+# Spec defines boat dimensions and measurements. This information is used to derive the rating. 
+[spec]
+# Boat specification data source [manual = configured in ./spec.toml; orc = pulled from orc database with specified 'orc_sailing_no']
+source = "manual"
+# Boat identifier when pulled from 'orc' source. This reflects the orc database 'SailNo'. 
+orc_sailing_no = ""

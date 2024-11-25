@@ -1,0 +1,10 @@
+# Friendly name (e.g. AETHER)
+name = ""
+# Boat class (e.g. DEHLER 30 OD)
+class = ""
+# Boat age (specify the vessel's construction year)
+age = ""
+# Name of the manufacturer of the boat (e.g. DEHLER)
+builder = ""
+# Name of the designer of the boat (e.g. JUDEL/VROELIJK)
+designer = ""

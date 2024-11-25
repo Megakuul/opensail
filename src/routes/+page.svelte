@@ -15,4 +15,20 @@
 
 <div class="flex flex-col items-center"> 
   <Logo class="w-8/12 mt-10"></Logo>
+
+	<div class="wrapper">
+		<div class="box w-96 h-96 ">
+
+		</div>
+	</div>
+
 </div>
+
+<style>
+	.wrapper {
+		perspective: 1000px;
+	}
+	.box {
+		transform: rotateY(12deg);
+	}
+</style>
