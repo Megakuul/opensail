@@ -1,0 +1,11 @@
+# Team name / identifier.
+name = "example"
+
+# Specifies all team members by name.
+[[members]]
+# Specifies the user email, if a github account is linked to this email, the user is capable of submitting changes to the team. 
+email = ""
+# Specifies members full name.
+name = ""
+# Specifies the members roles ['skipper', 'trimmer', 'bowman']
+roles = [""]
