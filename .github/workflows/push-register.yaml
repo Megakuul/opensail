@@ -1,0 +1,48 @@
+name: Build opensail data release from registrations
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "register/**"
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+
+      - name: install go
+        uses: actions/setup-go@v5
+
+      - name: install ci engine
+        run: |
+          go install github.com/megakuul/opensail/engine@latest          
+          engine --version
+      
+      - name: generate application release
+        run: |
+          engine generate
+
+      - name: bump version and push tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+
+      - name: push versioned release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+
+      - name: push latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "latest"
+          files: out/*

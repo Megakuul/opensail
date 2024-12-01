@@ -1,7 +1,5 @@
 # Ship identifier issued by the national sailing authority in format <national_code>_<unique_identifier>.
 id = "sui_example"
-# Specifies all users that are capable of submitting changes to the ship (specified as github email address). 
-owners = [""]
 # Specifies the team identifier of the team currently sailing this boat.
 team = "example"
 

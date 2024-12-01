@@ -62,5 +62,5 @@ type EvaluationOutput struct {
 }
 
 func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
-
+	return &EvaluationOutput{TCC: 1}, nil
 }

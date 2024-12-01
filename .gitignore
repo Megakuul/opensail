@@ -2,4 +2,3 @@
 .svelte-kit
 node_modules
 build
-.env

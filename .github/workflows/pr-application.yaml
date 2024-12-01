@@ -1,0 +1,23 @@
+name: Validate and tag application pull request
+on: 
+  pull_request:
+    paths-ignore:
+      - "register/**"
+
+jobs:
+  validate-and-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-request: write
+    steps:
+      - name: label pull request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ["application", "needs-review"]
+            })
+
