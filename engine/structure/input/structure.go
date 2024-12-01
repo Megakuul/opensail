@@ -19,21 +19,21 @@
 
 package input
 
-// RepoStructure holds metainformation used to find the register
+// Structure holds metainformation used to find the register
 // files and directories inside the repository.
-type RepoStructure struct {
+type Structure struct {
 	Team TeamStructure
 	Ship ShipStructure
 }
 
 type TeamStructure struct {
-	TeamBasePath   string
-	TeamConfigFile string
+	BasePath   string
+	ConfigFile string
 }
 
 type ShipStructure struct {
-	ShipBasePath   string
-	ShipConfigFile string
-	ShipInfoFile   string
-	ShipSpecFile   string
+	BasePath   string
+	ConfigFile string
+	InfoFile   string
+	SpecFile   string
 }

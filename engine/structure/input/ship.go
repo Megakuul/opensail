@@ -21,26 +21,38 @@ package input
 
 // ShipConfig specifies the toml representation of the ship configuration.
 type ShipConfig struct {
-	// ID is the ship identifier issued by national sailing authority (<national_code>_<unique_identifier>)
-	ID string `toml:"id" validate:"required,lowercase"`
 	// Team specifies the team identifier currently sailing this boat
-	Team string `toml:"team" validate:"required,lowercase"`
+	Team string `toml:"team" validate:"required"`
 	// Info contains general boat information that doesn't influence rating
 	Info ShipConfigInfo `toml:"info" validate:"required"`
 	// Spec contains boat dimensions and measurements used for rating
 	Spec ShipConfigSpec `toml:"spec" validate:"required"`
 }
 
+type SHIP_INFO_SOURCE string
+
+const (
+	SHIP_INFO_MANUAL SHIP_INFO_SOURCE = "manual"
+	SHIP_INFO_ORC    SHIP_INFO_SOURCE = "orc"
+)
+
 type ShipConfigInfo struct {
 	// Source indicates data origin: "manual" or "orc"
-	Source string `toml:"source" validate:"required,oneof=manual orc"`
+	Source SHIP_INFO_SOURCE `toml:"source" validate:"required"`
 	// ORCSailingNo is the boat identifier in ORC database
 	ORCSailingNo string `toml:"orc_sailing_no"`
 }
 
+type SHIP_SPEC_SOURCE string
+
+const (
+	SHIP_SPEC_MANUAL SHIP_SPEC_SOURCE = "manual"
+	SHIP_SPEC_ORC    SHIP_SPEC_SOURCE = "orc"
+)
+
 type ShipConfigSpec struct {
 	// Source indicates data origin: "manual" or "orc"
-	Source string `toml:"source" validate:"required,oneof=manual orc"`
+	Source SHIP_SPEC_SOURCE `toml:"source" validate:"required"`
 	// ORCSailingNo is the boat identifier in ORC database
 	ORCSailingNo string `toml:"orc_sailing_no"`
 }

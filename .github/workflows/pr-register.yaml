@@ -22,8 +22,7 @@ jobs:
             --github-owner ${{ github.repository_owner }} \
             --github-repo ${{ github.event.repository.name }} \
             --github-pr-number ${{ github.event.pull_request.number }} \
-            --github-token ${{ secrets.GITHUB_TOKEN }} \
-            --orc-api-endpoint "https://data.orc.org/public/WPub.dll"
+            --github-token ${{ secrets.GITHUB_TOKEN }}
 
       - name: label pull request
         uses: actions/github-script@v7

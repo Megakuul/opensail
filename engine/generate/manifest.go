@@ -17,25 +17,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package input
+package generate
 
-// TeamConfig specifies the toml representation of the teams configuration.
-type TeamConfig struct {
-	// Name specifies the team name/identifier
-	Name string `toml:"name" validate:"required"`
-	// Members contains the list of team members
-	Members []TeamConfigMember `toml:"members"`
-}
+import (
+	"encoding/json"
+	"time"
 
-var TEAM_MEMBER_ROLES = map[string]struct{}{
-	"skipper": {},
-	"bowman":  {},
-	"timmer":  {},
-}
+	"github.com/megakuul/opensail/engine/structure/output"
+	"github.com/megakuul/opensail/engine/version"
+)
 
-type TeamConfigMember struct {
-	// Name specifies the member's full name
-	Name string `toml:"name" validate:"required"`
-	// Roles specifies the member's roles (skipper, trimmer, bowman)
-	Roles []string `toml:"roles"`
+// generateManifest generates the manifest file.
+func generateManifest() ([]byte, error) {
+	manifestConfig := &output.ManifestConfig{
+		EngineVersion: version.Version(),
+		Timestamp:     time.Now().Unix(),
+	}
+
+	manifestConfigRaw, err := json.Marshal(manifestConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return manifestConfigRaw, nil
 }

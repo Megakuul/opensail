@@ -22,27 +22,37 @@ package output
 type ShipMap map[string]ShipConfig
 
 type ShipConfig struct {
-	Owner      string           `json:"owner" validate:"required"`
-	Team       string           `json:"team" validate:"required"`
-	BoatInfo   ShipConfigInfo   `json:"boat_info" validate:"required"`
-	BoatSpec   ShipConfigSpec   `json:"boat_spec" validate:"required"`
-	BoatRating ShipConfigRating `json:"boat_rating" validate:"required"`
+	Team       string           `json:"team"`
+	ShipInfo   ShipConfigInfo   `json:"boat_info"`
+	ShipSpec   ShipConfigSpec   `json:"boat_spec"`
+	ShipRating ShipConfigRating `json:"boat_rating"`
 }
+
+type SHIP_INFO_SOURCE string
+
+const (
+	SHIP_INFO_MANUAL SHIP_INFO_SOURCE = "manual"
+	SHIP_INFO_ORC    SHIP_INFO_SOURCE = "orc"
+)
 
 type ShipConfigInfo struct {
-	Source               string `json:"source"`
-	Name                 string `json:"name"`
-	Class                string `json:"class"`
-	Family               string `json:"family"`
-	Age                  string `json:"age"`
-	Builder              string `json:"builder"`
-	Designer             string `json:"designer"`
-	CertificateType      string `json:"certificate_type"`
-	CertificateIssueDate string `json:"certificate_issue_date"`
+	Source   SHIP_INFO_SOURCE `json:"source"`
+	Name     string           `json:"name"`
+	Class    string           `json:"class"`
+	Age      string           `json:"age"`
+	Builder  string           `json:"builder"`
+	Designer string           `json:"designer"`
 }
 
+type SHIP_SPEC_SOURCE string
+
+const (
+	SHIP_SPEC_MANUAL SHIP_SPEC_SOURCE = "manual"
+	SHIP_SPEC_ORC    SHIP_SPEC_SOURCE = "orc"
+)
+
 type ShipConfigSpec struct {
-	Source    string              `json:"source"`
+	Source    SHIP_SPEC_SOURCE    `json:"source"`
 	Dimension ShipConfigDimension `json:"dimension"`
 	SailArea  ShipConfigSailArea  `json:"sail_area"`
 	Misc      ShipConfigMisc      `json:"misc"`
@@ -71,14 +81,7 @@ type ShipConfigMisc struct {
 }
 
 type ShipConfigRating struct {
-	OS             ShipConfigRatingSystem `json:"os" `
-	SwissYardstick ShipConfigRatingSystem `json:"swiss_yardstick" `
-	ORC            ShipConfigRatingSystem `json:"orc"`
-	IRC            ShipConfigRatingSystem `json:"irc"`
-}
-
-type ShipConfigRatingSystem struct {
-	Source string  `json:"source"`
-	Value  string  `json:"value"`
-	TCC    float64 `json:"tcc"`
+	Version string  `json:"version"`
+	Value   string  `json:"value"`
+	TCC     float64 `json:"tcc"`
 }

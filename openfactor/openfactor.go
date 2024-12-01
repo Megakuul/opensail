@@ -19,6 +19,11 @@
 
 package openfactor
 
+// Version returns the algorithm version.
+func Version() string {
+	return "v0.0.1"
+}
+
 // EvaluationInput specifies data that is used to derive the rating.
 type EvaluationInput struct {
 	// LOA specifies the ship length in meters
@@ -58,6 +63,7 @@ type EvaluationInput struct {
 }
 
 type EvaluationOutput struct {
+	// Time correction coefficient produced by the algorithm.
 	TCC float64
 }
 

@@ -17,25 +17,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package input
+package version
 
-// TeamConfig specifies the toml representation of the teams configuration.
-type TeamConfig struct {
-	// Name specifies the team name/identifier
-	Name string `toml:"name" validate:"required"`
-	// Members contains the list of team members
-	Members []TeamConfigMember `toml:"members"`
-}
+import "runtime/debug"
 
-var TEAM_MEMBER_ROLES = map[string]struct{}{
-	"skipper": {},
-	"bowman":  {},
-	"timmer":  {},
-}
-
-type TeamConfigMember struct {
-	// Name specifies the member's full name
-	Name string `toml:"name" validate:"required"`
-	// Roles specifies the member's roles (skipper, trimmer, bowman)
-	Roles []string `toml:"roles"`
+func Version() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "(devel)"
+	}
+	return info.Main.Version
 }

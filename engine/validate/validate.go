@@ -36,15 +36,14 @@ type validateFlags struct {
 	githubRepo     string
 	githubPrNumber int
 	githubToken    string
-	orcApiEndpoint string
 }
 
-func NewValidateCmd(inputStruct *input.RepoStructure, outputStruct *output.DataStructure) *cobra.Command {
+func NewValidateCmd(inputStruct *input.Structure, outputStruct *output.Structure) *cobra.Command {
 	flags := &validateFlags{}
 
 	cmd := &cobra.Command{
 		Use:          "validate",
-		Short:        "validate opensail register",
+		Short:        "validate pull requests to the opensail register",
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return Run(flags, inputStruct, outputStruct)
@@ -67,14 +66,11 @@ func NewValidateCmd(inputStruct *input.RepoStructure, outputStruct *output.DataS
 	cmd.Flags().StringVar(&flags.githubToken, "github-token",
 		"", "specify the github api token",
 	)
-	cmd.Flags().StringVar(&flags.orcApiEndpoint, "orc-api-endpoint",
-		"https://data.orc.org/public/WPub.dll", "specify the base url for the orc api",
-	)
 
 	return cmd
 }
 
-func Run(flags *validateFlags, inputStruct *input.RepoStructure, outputStruct *output.DataStructure) error {
+func Run(flags *validateFlags, inputStruct *input.Structure, outputStruct *output.Structure) error {
 	client := github.NewClient(nil)
 	files, _, err := client.PullRequests.ListFiles(
 		context.TODO(),
@@ -89,18 +85,11 @@ func Run(flags *validateFlags, inputStruct *input.RepoStructure, outputStruct *o
 
 	updatedTeams, updatedShips := map[string]struct{}{}, map[string]struct{}{}
 	for _, file := range files {
-		if strings.HasPrefix(file.GetFilename(), "register/teams/") {
-			teamPrefix := strings.TrimPrefix(file.GetFilename(), "register/teams/")
-			fileSegments := strings.Split(teamPrefix, "/")
-			if len(fileSegments) > 0 {
-				updatedShips[fileSegments[0]] = struct{}{}
-			}
-		} else if strings.HasPrefix(file.GetFilename(), "register/ships/") {
-			shipPrefix := strings.TrimPrefix(file.GetFilename(), "register/ships/")
-			fileSegments := strings.Split(shipPrefix, "/")
-			if len(fileSegments) > 0 {
-				updatedTeams[fileSegments[0]] = struct{}{}
-			}
+		if team := findComponentEntry(file.GetFilename(), inputStruct.Team.BasePath); team != "" {
+			updatedTeams[team] = struct{}{}
+		}
+		if ship := findComponentEntry(file.GetFilename(), inputStruct.Ship.BasePath); ship != "" {
+			updatedShips[ship] = struct{}{}
 		}
 	}
 
@@ -115,4 +104,17 @@ func Run(flags *validateFlags, inputStruct *input.RepoStructure, outputStruct *o
 	}
 
 	return nil
+}
+
+// findComponent returns the name of the component entry of the file.
+// e.g. 'register/teams/example/some/file.toml' & 'register/teams/' returns -> 'example'
+func findComponentEntry(filePath, componentPath string) string {
+	if strings.HasPrefix(filePath, componentPath) {
+		teamPrefix := strings.TrimPrefix(filePath, componentPath)
+		fileSegments := strings.Split(teamPrefix, "/")
+		if len(fileSegments) > 0 {
+			return fileSegments[0]
+		}
+	}
+	return ""
 }

@@ -19,7 +19,7 @@
 
 package output
 
-type TeamMap map[string]ShipConfig
+type TeamMap map[string]TeamConfig
 
 type TeamConfig struct {
 	Name    string             `json:"name"`

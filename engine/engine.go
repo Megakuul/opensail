@@ -27,27 +27,29 @@ import (
 	"github.com/megakuul/opensail/engine/structure/input"
 	"github.com/megakuul/opensail/engine/structure/output"
 	"github.com/megakuul/opensail/engine/validate"
+	"github.com/megakuul/opensail/engine/version"
+
 	"github.com/spf13/cobra"
 )
 
 func main() {
-	cmd := NewEngineCmd(&input.RepoStructure{
+	cmd := NewEngineCmd(&input.Structure{
 		Team: input.TeamStructure{
-			TeamBasePath:   "register/teams/",
-			TeamConfigFile: "team.toml",
+			BasePath:   "register/teams/",
+			ConfigFile: "team.toml",
 		},
 		Ship: input.ShipStructure{
-			ShipBasePath:   "register/ships/",
-			ShipConfigFile: "ship.toml",
-			ShipInfoFile:   "info.toml",
-			ShipSpecFile:   "spec.toml",
+			BasePath:   "register/ships/",
+			ConfigFile: "ship.toml",
+			InfoFile:   "info.toml",
+			SpecFile:   "spec.toml",
 		},
-	}, &output.DataStructure{
+	}, &output.Structure{
 		Team: output.TeamStructure{
-			TeamMapFile: "teams.json",
+			MapFile: "teams.json",
 		},
 		Ship: output.ShipStructure{
-			ShipMapFile: "ships.json",
+			MapFile: "ships.json",
 		},
 	})
 	if err := cmd.Execute(); err != nil {
@@ -56,16 +58,16 @@ func main() {
 	}
 }
 
-func NewEngineCmd(inputStruct *input.RepoStructure, outputStruct *output.DataStructure) *cobra.Command {
+func NewEngineCmd(inputStruct *input.Structure, outputStruct *output.Structure) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:           "engine",
 		Short:         "engine: opensail ci operator",
-		Version:       Version(),
+		Version:       version.Version(),
 		SilenceErrors: true,
 		SilenceUsage:  true,
 	}
 
-	cmd.AddCommand(generate.NewGenerateCmd())
+	cmd.AddCommand(generate.NewGenerateCmd(inputStruct, outputStruct))
 	cmd.AddCommand(validate.NewValidateCmd(inputStruct, outputStruct))
 
 	return cmd

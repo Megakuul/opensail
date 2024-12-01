@@ -27,7 +27,7 @@ jobs:
       
       - name: generate application release
         run: |
-          engine generate
+          engine generate --input-path "." --output-path "./out"
 
       - name: bump version and push tag
         uses: anothrNick/github-tag-action@v1

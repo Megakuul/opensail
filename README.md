@@ -21,5 +21,5 @@ The **engine** is essentially a replacement for common ci scripts. Due to the co
 
 Static configuration options are provided via vite environment variables (defaults defined in `.env`).
 
-[!NOTE]
-Notice that the project structure does not follow any best practice and is specifically designed to fit this use case.
+> [!NOTE]
+> Notice that the project structure does not follow any best practice and is specifically designed to fit this use case.

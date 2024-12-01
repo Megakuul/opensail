@@ -19,17 +19,22 @@
 
 package output
 
-// DataStructure holds metainformation used to understand how the
+// Structure holds metainformation used to understand how the
 // output data is structured.
-type DataStructure struct {
-	Team TeamStructure
-	Ship ShipStructure
+type Structure struct {
+	Manifest ManifestStructure
+	Team     TeamStructure
+	Ship     ShipStructure
+}
+
+type ManifestStructure struct {
+	ConfigFile string
 }
 
 type TeamStructure struct {
-	TeamMapFile string
+	MapFile string
 }
 
 type ShipStructure struct {
-	ShipMapFile string
+	MapFile string
 }

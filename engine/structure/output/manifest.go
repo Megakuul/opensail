@@ -17,14 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package main
+package output
 
-import "runtime/debug"
-
-func Version() string {
-	info, ok := debug.ReadBuildInfo()
-	if !ok {
-		return "(devel)"
-	}
-	return info.Main.Version
+type ManifestConfig struct {
+	EngineVersion string `json:"engine_version"`
+	Timestamp     int64  `json:"timestamp"`
 }

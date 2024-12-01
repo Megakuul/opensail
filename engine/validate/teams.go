@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 	"github.com/go-playground/validator/v10"
@@ -33,7 +34,7 @@ import (
 func validateTeams(repoPath string, updatedTeams map[string]struct{}, teamStruct input.TeamStructure) error {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
-	teamsPath := path.Join(repoPath, teamStruct.TeamBasePath)
+	teamsPath := path.Join(repoPath, teamStruct.BasePath)
 	teamsPathInfo, err := os.Stat(teamsPath)
 	if err != nil {
 		return err
@@ -59,7 +60,30 @@ func validateTeams(repoPath string, updatedTeams map[string]struct{}, teamStruct
 		if err != nil {
 			return err
 		}
+
+		err = validateTeamMembers(teamConfig.Members)
+		if err != nil {
+			return err
+		}
 	}
 
+	return nil
+}
+
+func validateTeamMembers(members []input.TeamConfigMember) error {
+	if len(members) < 1 {
+		return fmt.Errorf("expected at least 1 team member")
+	}
+	for _, member := range members {
+		if member.Name == "" {
+			return fmt.Errorf("invalid team member name: %s", member.Name)
+		}
+
+		for _, role := range member.Roles {
+			if _, ok := input.TEAM_MEMBER_ROLES[strings.ToLower(role)]; !ok {
+				return fmt.Errorf("invalid team member role: %s; expected one of %v", role, input.TEAM_MEMBER_ROLES)
+			}
+		}
+	}
 	return nil
 }
