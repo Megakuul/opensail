@@ -94,7 +94,10 @@ func validateShipInfo(info input.ShipConfigInfo, infoPath string) error {
 			return err
 		}
 	case input.SHIP_INFO_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo, info.ORCCertificateFamily)
+		if info.ORCSailingNo == "" {
+			return fmt.Errorf("invalid ship SailNo. '%s'", info.ORCSailingNo)
+		}
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
 		if err != nil {
 			return err
 		}
@@ -127,7 +130,10 @@ func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
 			return err
 		}
 	case input.SHIP_SPEC_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo, spec.ORCCertificateFamily)
+		if spec.ORCSailingNo == "" {
+			return fmt.Errorf("invalid ship SailNo. '%s'", spec.ORCSailingNo)
+		}
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
 		if err != nil {
 			return err
 		}

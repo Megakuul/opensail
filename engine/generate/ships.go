@@ -102,7 +102,11 @@ func generateShipInfo(info input.ShipConfigInfo, infoPath string) (*output.ShipC
 			Designer: shipInfo.Designer,
 		}, nil
 	case input.SHIP_INFO_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo, info.ORCCertificateFamily)
+		if info.ORCSailingNo == "" {
+			return nil, fmt.Errorf("invalid ship SailNo. '%s'", info.ORCSailingNo)
+		}
+
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
 		if err != nil {
 			return nil, err
 		}
@@ -161,7 +165,11 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 			},
 		}, nil
 	case input.SHIP_SPEC_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo, spec.ORCCertificateFamily)
+		if spec.ORCSailingNo == "" {
+			return nil, fmt.Errorf("invalid ship SailNo. '%s'", spec.ORCSailingNo)
+		}
+
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
 		if err != nil {
 			return nil, err
 		}

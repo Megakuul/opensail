@@ -41,8 +41,6 @@ type ShipConfigInfo struct {
 	Source SHIP_INFO_SOURCE `toml:"source" validate:"required"`
 	// ORCSailingNo is the boat identifier in ORC database
 	ORCSailingNo string `toml:"orc_sailing_no"`
-	// ORCCertificateFamily specifies the family of the registered orc certificate ('orc', 'dh' or 'ns').
-	ORCCertificateFamily string `toml:"orc_certificate_family"`
 }
 
 type SHIP_SPEC_SOURCE string
@@ -57,8 +55,6 @@ type ShipConfigSpec struct {
 	Source SHIP_SPEC_SOURCE `toml:"source" validate:"required"`
 	// ORCSailingNo is the boat identifier in ORC database
 	ORCSailingNo string `toml:"orc_sailing_no"`
-	// ORCCertificateFamily specifies the family of the registered orc certificate ('orc', 'dh' or 'ns').
-	ORCCertificateFamily string `toml:"orc_certificate_family"`
 }
 
 // ShipInfo specifies the toml representation of the ship information.

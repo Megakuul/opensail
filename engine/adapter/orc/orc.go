@@ -20,12 +20,12 @@
 package orc
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 const ORC_BASE_ENDPOINT = "http://data.orc.org/public/WPub.dll"
@@ -37,22 +37,14 @@ var CERT_FAMILIES = map[string]struct{}{
 }
 
 // GetDownBoatRMS executes the DownBoatRMS action on the orc api, querying by sail number.
-func GetDownBoatRMS(sailNo, certFamily string) (*DownBoatRMS, error) {
-	if _, ok := CERT_FAMILIES[strings.ToUpper(certFamily)]; !ok {
-		return nil, fmt.Errorf(
-			"preparing orc data fetch failed: invalid certificate family: '%s'; expected one of %v",
-			certFamily, CERT_FAMILIES,
-		)
-	}
-
-	orcUrl, _ := url.Parse(ORC_BASE_ENDPOINT)
-	orcUrl.Query().Add("action", "DownBoatRMS")
-	orcUrl.Query().Add("SailNo", sailNo)
-	orcUrl.Query().Add("Family", strings.ToUpper(certFamily))
-	orcUrl.Query().Add("ext", "json")
+func GetDownBoatRMS(sailNo string) (*DownBoatRMS, error) {
+	orcQuery := url.Values{}
+	orcQuery.Add("action", "DownBoatRMS")
+	orcQuery.Add("SailNo", sailNo)
+	orcQuery.Add("ext", "json")
 
 	client := &http.Client{}
-	resp, err := client.Get(orcUrl.String())
+	resp, err := client.Get(fmt.Sprintf("%s?%s", ORC_BASE_ENDPOINT, orcQuery.Encode()))
 	if err != nil {
 		return nil, fmt.Errorf("fetching orc data failed: %w", err)
 	}
@@ -63,7 +55,8 @@ func GetDownBoatRMS(sailNo, certFamily string) (*DownBoatRMS, error) {
 		return nil, fmt.Errorf("reading orc data failed: %w", err)
 	}
 
-	println(string(downBoatRmsRaw))
+	// Remove retarded BOM header that the orc api is using for whatever reason.
+	downBoatRmsRaw = bytes.TrimPrefix(downBoatRmsRaw, []byte("\xef\xbb\xbf"))
 
 	downBoatRms := &DownBoatRMS{}
 	err = json.Unmarshal(downBoatRmsRaw, downBoatRms)
