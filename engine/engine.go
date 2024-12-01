@@ -20,7 +20,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/megakuul/opensail/engine/generate"
@@ -45,6 +44,9 @@ func main() {
 			SpecFile:   "spec.toml",
 		},
 	}, &output.Structure{
+		Manifest: output.ManifestStructure{
+			ConfigFile: "manifest.json",
+		},
 		Team: output.TeamStructure{
 			MapFile: "teams.json",
 		},
@@ -53,7 +55,7 @@ func main() {
 		},
 	})
 	if err := cmd.Execute(); err != nil {
-		log.Println(err.Error())
+		os.Stderr.WriteString(err.Error() + "\n")
 		os.Exit(1)
 	}
 }

@@ -82,6 +82,5 @@ type ShipConfigMisc struct {
 
 type ShipConfigRating struct {
 	Version string  `json:"version"`
-	Value   string  `json:"value"`
 	TCC     float64 `json:"tcc"`
 }

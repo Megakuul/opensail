@@ -31,7 +31,7 @@ import (
 )
 
 // validateShips performs checks and validations on updated ship register entries.
-func validateShips(repoPath string, updatedShips map[string]struct{}, shipStruct input.ShipStructure) error {
+func validateShips(repoPath string, ships map[string]struct{}, shipStruct input.ShipStructure) error {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
 	shipsPath := path.Join(repoPath, shipStruct.BasePath)
@@ -43,7 +43,7 @@ func validateShips(repoPath string, updatedShips map[string]struct{}, shipStruct
 		return fmt.Errorf("expected ship directory at: %s", shipsPath)
 	}
 
-	for ship := range updatedShips {
+	for ship := range ships {
 		shipPath := path.Join(shipsPath, ship)
 
 		shipConfigRaw, err := os.ReadFile(path.Join(shipPath, shipStruct.ConfigFile))
@@ -94,7 +94,7 @@ func validateShipInfo(info input.ShipConfigInfo, infoPath string) error {
 			return err
 		}
 	case input.SHIP_INFO_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo, info.ORCCertificateFamily)
 		if err != nil {
 			return err
 		}
@@ -127,7 +127,7 @@ func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
 			return err
 		}
 	case input.SHIP_SPEC_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo, spec.ORCCertificateFamily)
 		if err != nil {
 			return err
 		}

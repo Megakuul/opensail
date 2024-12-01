@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
+	github.com/megakuul/opensail/openfactor v0.0.0-20241201192355-89af17898863 // indirect
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect

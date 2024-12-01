@@ -31,7 +31,7 @@ import (
 )
 
 // validateTeams performs checks and validations on updated team register entries.
-func validateTeams(repoPath string, updatedTeams map[string]struct{}, teamStruct input.TeamStructure) error {
+func validateTeams(repoPath string, teams map[string]struct{}, teamStruct input.TeamStructure) error {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
 	teamsPath := path.Join(repoPath, teamStruct.BasePath)
@@ -43,7 +43,7 @@ func validateTeams(repoPath string, updatedTeams map[string]struct{}, teamStruct
 		return fmt.Errorf("expected team directory at: %s", teamsPath)
 	}
 
-	for team := range updatedTeams {
+	for team := range teams {
 		teamPath := path.Join(teamsPath, team)
 
 		teamConfigRaw, err := os.ReadFile(path.Join(teamPath, "team.toml"))
@@ -81,7 +81,7 @@ func validateTeamMembers(members []input.TeamConfigMember) error {
 
 		for _, role := range member.Roles {
 			if _, ok := input.TEAM_MEMBER_ROLES[strings.ToLower(role)]; !ok {
-				return fmt.Errorf("invalid team member role: %s; expected one of %v", role, input.TEAM_MEMBER_ROLES)
+				return fmt.Errorf("invalid team member role: '%s'; expected one of %v", role, input.TEAM_MEMBER_ROLES)
 			}
 		}
 	}

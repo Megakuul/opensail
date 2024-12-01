@@ -31,11 +31,11 @@ import (
 )
 
 // generateTeams generates the teamMap.
-func generateTeams(teams map[string]struct{}, teamStruct input.TeamStructure) ([]byte, error) {
+func generateTeams(repoPath string, teams map[string]struct{}, teamStruct input.TeamStructure) ([]byte, error) {
 	teamMap := output.TeamMap{}
 
 	for team := range teams {
-		teamPath := path.Join(teamStruct.BasePath, team)
+		teamPath := path.Join(repoPath, teamStruct.BasePath, team)
 		teamConfigRaw, err := os.ReadFile(path.Join(teamPath, teamStruct.ConfigFile))
 		if err != nil {
 			return nil, fmt.Errorf("failed to read team config (team '%s'): %w", team, err)

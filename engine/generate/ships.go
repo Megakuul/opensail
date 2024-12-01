@@ -30,14 +30,15 @@ import (
 	"github.com/megakuul/opensail/engine/adapter/orc"
 	"github.com/megakuul/opensail/engine/structure/input"
 	"github.com/megakuul/opensail/engine/structure/output"
+	"github.com/megakuul/opensail/openfactor"
 )
 
 // generateShips generates the shipMap.
-func generateShips(ships map[string]struct{}, shipStruct input.ShipStructure) ([]byte, error) {
+func generateShips(repoPath string, ships map[string]struct{}, shipStruct input.ShipStructure) ([]byte, error) {
 	shipMap := output.ShipMap{}
 
 	for ship := range ships {
-		shipPath := path.Join(shipStruct.BasePath, ship)
+		shipPath := path.Join(repoPath, shipStruct.BasePath, ship)
 		shipConfigRaw, err := os.ReadFile(path.Join(shipPath, shipStruct.ConfigFile))
 		if err != nil {
 			return nil, fmt.Errorf("failed to read ship config (team '%s'): %w", ship, err)
@@ -101,7 +102,7 @@ func generateShipInfo(info input.ShipConfigInfo, infoPath string) (*output.ShipC
 			Designer: shipInfo.Designer,
 		}, nil
 	case input.SHIP_INFO_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo, info.ORCCertificateFamily)
 		if err != nil {
 			return nil, err
 		}
@@ -160,7 +161,7 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 			},
 		}, nil
 	case input.SHIP_SPEC_ORC:
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo, spec.ORCCertificateFamily)
 		if err != nil {
 			return nil, err
 		}
@@ -198,5 +199,26 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 }
 
 func generateShipRating(spec *output.ShipConfigSpec) (*output.ShipConfigRating, error) {
+	factorOutput, err := openfactor.EvaluateFactor(&openfactor.EvaluationInput{
+		LOA:                     spec.Dimension.LengthOverAll,
+		MaxDraft:                spec.Dimension.Draft,
+		MaxBeam:                 spec.Dimension.Beam,
+		IMSL:                    spec.Dimension.ForestrayHeight,
+		WSS:                     spec.Dimension.WettedSurfaceArea,
+		MainSailArea:            spec.SailArea.Main,
+		JibSailArea:             spec.SailArea.Jib,
+		AsymmetricSpinnakerArea: spec.SailArea.AsymmetricSpinnaker,
+		SymmetricSpinnakerArea:  spec.SailArea.SymmetricSpinnaker,
+		StabilityIndex:          spec.Misc.StabilityIndex,
+		Displacement:            spec.Misc.SailingDisplacement,
+		CrewWeight:              spec.Misc.MaxCrewWeight,
+	})
+	if err != nil {
+		return nil, err
+	}
 
+	return &output.ShipConfigRating{
+		Version: openfactor.Version(),
+		TCC:     factorOutput.TCC,
+	}, nil
 }

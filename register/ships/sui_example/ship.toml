@@ -6,9 +6,11 @@ team = "example"
 # Info defines general information about the boat. This information does not influence rating.
 [info]
 # Boat information data source [manual = configured in ./info.toml; orc = pulled from orc database with specified 'orc_sailing_no']
-source = "manual"
+source = "orc"
 # Boat identifier when pulled from 'orc' source. This reflects the orc database 'SailNo'. 
-orc_sailing_no = ""
+orc_sailing_no = "GRE-016"
+# Specifies the 'orc' certificate family [ORC = standard certs; DH = double handed certs; NS = non spinnaker certs]
+orc_certificate_family = "DH"
 
 # Spec defines boat dimensions and measurements. This information is used to derive the rating. 
 [spec]
@@ -16,3 +18,5 @@ orc_sailing_no = ""
 source = "manual"
 # Boat identifier when pulled from 'orc' source. This reflects the orc database 'SailNo'. 
 orc_sailing_no = ""
+# Specifies the 'orc' certificate family [ORC = standard certs; DH = double handed certs; NS = non spinnaker certs]
+orc_certificate_family = "DH"

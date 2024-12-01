@@ -57,7 +57,6 @@ func NewGenerateCmd(inputStruct *input.Structure, outputStruct *output.Structure
 }
 
 func Run(flags *generateFlags, inputStruct *input.Structure, outputStruct *output.Structure) error {
-
 	teamsDirectory, err := os.ReadDir(path.Join(flags.inputPath, inputStruct.Team.BasePath))
 	if err != nil {
 		return err
@@ -80,29 +79,34 @@ func Run(flags *generateFlags, inputStruct *input.Structure, outputStruct *outpu
 		}
 	}
 
+	err = os.MkdirAll(flags.outputPath, 0755)
+	if err != nil {
+		return err
+	}
+
 	manifestData, err := generateManifest()
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(outputStruct.Manifest.ConfigFile, manifestData, 0644)
+	err = os.WriteFile(path.Join(flags.outputPath, outputStruct.Manifest.ConfigFile), manifestData, 0644)
 	if err != nil {
 		return err
 	}
 
-	teamsData, err := generateTeams(teams, inputStruct.Team)
+	teamsData, err := generateTeams(flags.inputPath, teams, inputStruct.Team)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(outputStruct.Team.MapFile, teamsData, 0644)
+	err = os.WriteFile(path.Join(flags.outputPath, outputStruct.Team.MapFile), teamsData, 0644)
 	if err != nil {
 		return err
 	}
 
-	shipData, err := generateShips(ships, inputStruct.Ship)
+	shipData, err := generateShips(flags.inputPath, ships, inputStruct.Ship)
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(outputStruct.Ship.MapFile, shipData, 0644)
+	err = os.WriteFile(path.Join(flags.outputPath, outputStruct.Ship.MapFile), shipData, 0644)
 	if err != nil {
 		return err
 	}
