@@ -1,20 +1,21 @@
 <script>
-  import { Teams, TeamsException } from "$lib/data/teams.svelte";
+  import { Teams } from "$lib/data/teams.svelte";
   import { Versions } from "$lib/data/versions.svelte";
   import { onMount } from "svelte";
 
   onMount(async () => {
     await Versions.load();
+    await Teams.load();
   })
 </script>
 
 <h1>Teams</h1>
 
-{#if Teams}
+{#if Teams.teams}
   <p>Team</p>
-{:else if TeamsException}
+{:else if Teams.error()}
 <p>
-  {TeamsException}
+  {Teams.error()}
 </p>
 {:else}
 <div class="flex items-center justify-center">

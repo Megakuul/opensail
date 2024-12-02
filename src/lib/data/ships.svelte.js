@@ -1,24 +1,25 @@
 import { Versions } from "$lib/data/versions.svelte.js";
 import { FetchShips } from "$lib/adapter/ships/ships.js";
 
-/** @type {import("$lib/adapter/ships/ships.js").ShipMap | null} */
-export let Ships = $state(null);
+export let Ships = CreateShips();
 
-/** @type {string} */
-export let ShipsException = $state("");
+export function CreateShips() {
+  /** @type {import("$lib/adapter/ships/ships.js").ShipMap | null} */
+  let ships = $state(null);
 
-/** @param {string} version @throws {AdapterError} */
-export const LoadShips = async (version) => {
-  try {
-    Ships = await FetchShips(version);
-    ShipsException = "";
-  } catch (/** @type {any} */ err) {
-    ShipsException = err.message;
+  /** @type {string} */
+  let shipsException = $state("");
+
+  return {
+    get ships() { return ships },
+    error: () => { return shipsException },
+    load: async () => {
+      try {
+        ships = await FetchShips(Versions.latest());
+        shipsException = "";
+      } catch (/** @type {any} */ err) {
+        shipsException = err.message;
+      }
+    }
   }
 }
-
-$effect(() => {
-  if (Versions.latest()) {
-    LoadShips(Versions.latest());
-  }
-})

@@ -1,24 +1,25 @@
 import { Versions } from "$lib/data/versions.svelte.js";
 import { FetchManifest } from "$lib/adapter/manifest/manifest.js";
 
-/** @type {import("$lib/adapter/manifest/manifest.js").ManifestConfig | null} */
-export let Manifest = $state(null);
+export let Manifest = CreateManifest();
 
-/** @type {string} */
-export let ManifestException = $state("");
+export function CreateManifest() {
+  /** @type {import("$lib/adapter/manifest/manifest.js").ManifestConfig | null} */
+  let manifest = $state(null);
 
-/** @param {string} version @throws {AdapterError} */
-export const LoadManifest = async (version) => {
-  try {
-    Manifest = await FetchManifest(version);
-    ManifestException = "";
-  } catch (/** @type {any} */ err) {
-    ManifestException = err.message;
+  /** @type {string} */
+  let manifestException = $state("");
+
+  return {
+    get manifest() { return manifest },
+    error: () => { return manifestException },
+    load: async () => {
+      try {
+        manifest = await FetchManifest(Versions.latest());
+        manifestException = "";
+      } catch (/** @type {any} */ err) {
+        manifestException = err.message;
+      }
+    }
   }
 }
-
-$effect(() => {
-  if (Versions.latest()) {
-    LoadManifest(Versions.latest());
-  }
-})

@@ -1,24 +1,25 @@
 import { Versions } from "$lib/data/versions.svelte.js";
 import { FetchTeams } from "$lib/adapter/teams/teams.js";
 
-/** @type {import("$lib/adapter/teams/teams.js").TeamMap | null} */
-export let Teams = $state(null);
+export let Teams = CreateTeams();
 
-/** @type {string} */
-export let TeamsException = $state("");
+export function CreateTeams() {
+  /** @type {import("$lib/adapter/teams/teams.js").TeamMap | null} */
+  let teams = $state(null);
 
-/** @param {string} version @throws {AdapterError} */
-export const LoadTeams = async (version) => {
-  try {
-    Teams = await FetchTeams(version);
-    TeamsException = "";
-  } catch (/** @type {any} */ err) {
-    TeamsException = err.message;
+  /** @type {string} */
+  let teamsException = $state("");
+
+  return {
+    get teams() { return teams },
+    error: () => { return teamsException },
+    load: async () => {
+      try {
+        teams = await FetchTeams(Versions.latest());
+        teamsException = "";
+      } catch (/** @type {any} */ err) {
+        teamsException = err.message;
+      }
+    }
   }
 }
-
-$effect(() => {
-  if (Versions.latest()) {
-    LoadTeams(Versions.latest());
-  }
-})
