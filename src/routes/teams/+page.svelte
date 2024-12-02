@@ -1,5 +1,5 @@
 <script>
-  import { Ships, ShipsException } from "$lib/data/ships.svelte";
+  import { Teams, TeamsException } from "$lib/data/teams.svelte";
   import { Versions } from "$lib/data/versions.svelte";
   import { onMount } from "svelte";
 
@@ -8,13 +8,13 @@
   })
 </script>
 
-<h1>Ships</h1>
+<h1>Teams</h1>
 
-{#if Ships}
+{#if Teams}
   <p>Team</p>
-{:else if ShipsException}
+{:else if TeamsException}
 <p>
-  {ShipsException}
+  {TeamsException}
 </p>
 {:else}
 <div class="flex items-center justify-center">

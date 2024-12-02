@@ -63,11 +63,12 @@ import { AdapterError } from "$lib/adapter/error";
 
 /**
  * Fetches the full ShipMap.
+ * @param {string} version
  * @returns {Promise<ShipMap>}
  * @throws {AdapterError}
  */
-export const FetchShips = async () => {
-  const res = await fetch(`${import.meta.env.VITE_OPENSAIL_DATA_ENDPOINT}/ships.json`, {
+export const FetchShips = async (version) => {
+  const res = await fetch(`/api/${version}/ships.json`, {
     method: "GET",
   })
   if (res.ok) {

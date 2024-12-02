@@ -8,11 +8,12 @@ import { AdapterError } from "$lib/adapter/error";
 
 /**
  * Fetches the ManifestConfig.
+ * @param {string} version
  * @returns {Promise<ManifestConfig>}
  * @throws {AdapterError}
  */
-export const FetchManifest = async () => {
-  const res = await fetch(`${import.meta.env.VITE_OPENSAIL_DATA_ENDPOINT}/manifest.json`, {
+export const FetchManifest = async (version) => {
+  const res = await fetch(`/api/${version}/manifest.json`, {
     method: "GET",
   })
   if (res.ok) {

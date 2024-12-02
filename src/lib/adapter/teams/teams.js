@@ -18,11 +18,12 @@ import { AdapterError } from "$lib/adapter/error";
 
 /**
  * Fetches the full TeamMap.
+ * @param {string} version
  * @returns {Promise<TeamMap>}
  * @throws {AdapterError}
  */
-export const FetchTeams = async () => {
-  const res = await fetch(`${import.meta.env.VITE_OPENSAIL_DATA_ENDPOINT}/teams.json`, {
+export const FetchTeams = async (version) => {
+  const res = await fetch(`/api/${version}/teams.json`, {
     method: "GET",
   })
   if (res.ok) {
