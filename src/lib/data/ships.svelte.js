@@ -13,10 +13,12 @@ export function CreateShips() {
   return {
     get ships() { return ships },
     error: () => { return shipsException },
-    load: async () => {
+    load: async (/** @type {string} */ version) => {
+      if (!version) return;
       try {
-        ships = await FetchShips(Versions.latest());
         shipsException = "";
+        ships = null;
+        ships = await FetchShips(version);
       } catch (/** @type {any} */ err) {
         shipsException = err.message;
       }

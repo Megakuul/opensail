@@ -3,7 +3,12 @@ export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
 
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        "primary": "var(--primary-bg-color)",
+        "secondary": "var(--secondary-bg-color)"
+      }
+    }
   },
 
   plugins: []

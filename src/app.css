@@ -2,11 +2,16 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
 :root {
   --primary-bg-color: #4379F2;
   --secondary-bg-color: black;
 }
 
+* {
+  font-family: "Ubuntu", "Roboto";
+}
 html::-webkit-scrollbar, body::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
@@ -22,4 +27,43 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100vh;
+}
+
+.overflow-scroll-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+.overflow-scroll-hidden {
+  overflow: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.title {
+  display: block;
+  font-weight: 800;
+  color: var(--primary-bg-color);
+  position: relative;
+  transition: all ease 1s;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.title:hover {
+  filter: brightness(110%);
+  cursor: pointer;
+}
+.title:before,
+.title:after {
+  content: attr(title);
+  color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+}
+.title:before {
+  top: 0.5px;
+  left: 0.5px;
+}
+.title:after {
+  top: 1.5px;
+  left: 1.5px;
 }

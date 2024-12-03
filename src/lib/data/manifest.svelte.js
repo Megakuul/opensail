@@ -13,10 +13,12 @@ export function CreateManifest() {
   return {
     get manifest() { return manifest },
     error: () => { return manifestException },
-    load: async () => {
+    load: async (/** @type {string} */ version) => {
+      if (!version) return;
       try {
-        manifest = await FetchManifest(Versions.latest());
         manifestException = "";
+        manifest = null;
+        manifest = await FetchManifest(version);
       } catch (/** @type {any} */ err) {
         manifestException = err.message;
       }

@@ -13,10 +13,12 @@ export function CreateTeams() {
   return {
     get teams() { return teams },
     error: () => { return teamsException },
-    load: async () => {
+    load: async (/** @type {string} */ version) => {
+      if (!version) return;
       try {
-        teams = await FetchTeams(Versions.latest());
         teamsException = "";
+        teams = null;
+        teams = await FetchTeams(version);
       } catch (/** @type {any} */ err) {
         teamsException = err.message;
       }
