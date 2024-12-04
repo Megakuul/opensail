@@ -7,9 +7,9 @@ import { AdapterError } from "$lib/adapter/error";
 /**
  * @typedef {Object} ShipConfig
  * @property {string} team
- * @property {ShipConfigInfo} boatInfo
- * @property {ShipConfigSpec} boatSpec
- * @property {ShipConfigRating} boatRating
+ * @property {ShipConfigInfo} boat_info
+ * @property {ShipConfigSpec} boat_spec
+ * @property {ShipConfigRating} boat_rating
  */
 
 /**
@@ -26,33 +26,33 @@ import { AdapterError } from "$lib/adapter/error";
  * @typedef {Object} ShipConfigSpec
  * @property {string} source
  * @property {ShipConfigDimension} dimension
- * @property {ShipConfigSailArea} sailArea
+ * @property {ShipConfigSailArea} sail_area
  * @property {ShipConfigMisc} misc
  */
 
 /**
  * @typedef {Object} ShipConfigDimension
- * @property {number} lengthOverAll
+ * @property {number} length_over_all
  * @property {number} draft
  * @property {number} beam
- * @property {number} forestrayHeight
- * @property {number} wettedSurfaceArea
+ * @property {number} forestray_height
+ * @property {number} wetted_surface_area
  */
 
 /**
  * @typedef {Object} ShipConfigSailArea
  * @property {number} main
  * @property {number} jib
- * @property {number} asymmetricSpinnaker
- * @property {number} symmetricSpinnaker
+ * @property {number} asymmetric_spinnaker
+ * @property {number} symmetric_spinnaker
  */
 
 /**
  * @typedef {Object} ShipConfigMisc
- * @property {number} stabilityIndex
- * @property {number} sailingDisplacement
- * @property {number} measuredDisplacement
- * @property {number} maxCrewWeight
+ * @property {number} stability_index
+ * @property {number} sailing_displacement
+ * @property {number} measured_displacement
+ * @property {number} max_crew_weight
  */
 
 /**

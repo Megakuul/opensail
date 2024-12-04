@@ -2,7 +2,7 @@ import { AdapterError } from "$lib/adapter/error";
 
 /**
  * @typedef {Object} ManifestConfig
- * @property {string} engineVersion
+ * @property {string} engine_version
  * @property {number} timestamp
  */
 

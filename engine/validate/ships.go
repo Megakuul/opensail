@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"regexp"
 
 	"github.com/BurntSushi/toml"
 	"github.com/go-playground/validator/v10"
@@ -59,6 +60,11 @@ func validateShips(repoPath string, ships map[string]struct{}, shipStruct input.
 		err = validate.Struct(shipConfig)
 		if err != nil {
 			return err
+		}
+
+		ok, err := regexp.MatchString("^[a-z]{3}_\\d+$", ship)
+		if err != nil || !ok {
+			return fmt.Errorf("ship identifier does not match 'sui_420' format")
 		}
 
 		err = validateShipInfo(shipConfig.Info, path.Join(shipPath, shipStruct.InfoFile))

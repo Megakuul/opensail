@@ -25,15 +25,15 @@
     <p>Team</p>
     {:else if Versions.error()}
     <div class="mt-auto">
-      <ExceptionBar class="" title={"Error - Failed to load versions"} message={Versions.error()}></ExceptionBar>
+      <ExceptionBar class="min-w-[50vw]" title={"Error - Failed to load versions"} message={Versions.error()}></ExceptionBar>
     </div>
     {:else if Manifest.error()}
     <div class="mt-auto">
-      <ExceptionBar class="" title={"Error - Failed to load manifest"} message={Manifest.error()}></ExceptionBar>
+      <ExceptionBar class="min-w-[50vw]" title={"Error - Failed to load manifest"} message={Manifest.error()}></ExceptionBar>
     </div>
     {:else if Teams.error()}
     <div class="mt-auto">
-      <ExceptionBar class="" title={"Error - Failed to load teams"} message={Teams.error()}></ExceptionBar>
+      <ExceptionBar class="min-w-[50vw]" title={"Error - Failed to load teams"} message={Teams.error()}></ExceptionBar>
     </div>
     {:else}
   <Loader class="w-36 h-[70vh]"></Loader>
