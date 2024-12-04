@@ -27,7 +27,7 @@
     <!-- mainsail -->
     <path id="mainsail" d="M381.722 1.72878C380.879 0.61731 379.238 0.774566 378.523 1.97169L95.1718 476.03C93.9857 478.014 95.3955 480.538 97.7073 480.569L614.636 487.403C616.675 487.43 617.601 484.542 615.962 483.329C596.951 469.259 537.651 418.065 504.799 306.847C494.633 313.88 482.297 318 469 318C434.206 318 406 289.794 406 255C406 220.206 434.206 192 469 192C471.19 192 473.355 192.112 475.487 192.33C441.087 83.3147 391.526 14.664 381.722 1.72878Z" />
   </svg>
-  <p class="text-black/50 text-2xl font-bold min-w-32">Loading
+  <p class="text-slate-200/60 text-2xl font-bold min-w-32">Loading
     {#each Array(loadingDots) as _}
       <span transition:fade class="mx-[1px]"> . </span>
     {/each}
@@ -53,7 +53,7 @@
     fill: url(#gradient);
     fill-opacity: 0;
 
-    stroke: var(--secondary-bg-color);
+    stroke: rgba(255, 255, 255, 0.3);
     stroke-opacity: 0.8;
     stroke-width: 3;
     stroke-linecap: round;
