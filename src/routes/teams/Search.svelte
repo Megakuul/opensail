@@ -3,14 +3,14 @@
   import { cn } from "$lib/utils";
   import { fade } from "svelte/transition";
 
-  let { class: klass } = $props();
+  let { class: klass, teamsPerCycle=150 } = $props();
 
   let searchException = $state("");
 
   let searchQuery = $state("");
 
   /** @param {string} query */
-  const searchTeams = (query) => {
+  const searchTeams = async (query) => {
     Teams.reset();
     if (!Teams.teams || !query) {
       return;
@@ -19,17 +19,26 @@
       searchException = "";
 
       /** @type {import("$lib/adapter/teams/teams.js").TeamMap} */
-      let queriedTeams = {};
+      let matchingTeams = {};
       
-      // this is extremly inefficient in theory; in praxis this algorithm can easily handle
-      // the applications maximum scale (limited by the global number of unique regatta boat teams).
+      let teamIndex = 0;
       for (const [key, map] of Object.entries(Teams.teams)) {
+        teamIndex++;
         if (key.includes(query, 0) || JSON.stringify(map).includes(query, 0)) {
-          queriedTeams[key] = map;
+          matchingTeams[key] = map;
         }
-      }
 
-      Teams.replace(queriedTeams);
+        // in maximum scale Teams.teams is assumed to hold >30000 teams (>1 MB)
+        // parsing and searching all of them takes 0.5 seconds. To avoid blocking
+        // the eventloop we register a promise that allows us to yield control
+        // to the eventloop. Doing this 30000 times means 30000 eventloop iterations until
+        // the ships are filtered, which is a long.. very long time. To avoid this we take
+        // a middleground, where control is yielded after every xth team.
+        // 'teamsPerCycle' define after how many ships are calculated before yielding control.
+        // High number = fast ui & slow search; Low number = slow ui & fast search.
+        if (!(teamIndex % teamsPerCycle)) await new Promise(resolve => setTimeout(resolve, 0));
+      }
+      Teams.replace(matchingTeams);
     } catch (err) {
       console.error(err);
       searchException = "ship query failed";

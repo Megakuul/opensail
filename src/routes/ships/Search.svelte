@@ -2,13 +2,9 @@
   import { Ships } from "$lib/data/ships.svelte";
   import { cn } from "$lib/utils";
   import Icon from "@iconify/svelte";
-    import { onDestroy, onMount } from "svelte";
   import { fade } from "svelte/transition";
 
-  let { class: klass } = $props();
-
-  /** @type {Worker | null} */
-  let searchWorker = null;
+  let { class: klass, shipsPerCycle=150 } = $props();
 
   let searchLoaderState = $state(false);
 
@@ -16,35 +12,43 @@
 
   let searchQuery = $state("");
 
-  onMount(() => {
-    searchWorker = new Worker("SearchWorker.js");
-  })
-
-  onDestroy(() => {
-    if (searchWorker) searchWorker.terminate();
-  })
-
   /** @param {string} query */
-  const searchShips = (query) => {
+  const searchShips = async (query) => {
     Ships.reset();
-    if (!Ships.ships || !query || !searchWorker) {
+    if (!Ships.ships || !query) {
       return;
     }
 
     searchLoaderState = true;
     searchException = "";
 
-    searchWorker.postMessage({components: JSON.stringify(Ships.ships), query: query})
-    searchWorker.onmessage = function(e) {
-      const { status, matching } = e.data;
-      if (status) {
-        console.error(status);
-        searchException = "ship query failed";
-      } else {
-        Ships.replace(matching);
+    try {
+      /** @type {import("$lib/adapter/ships/ships.js").ShipMap} */
+      let matchingShips = {};
+
+      let shipIndex = 0;
+      for (const [key, value] of Object.entries(Ships.ships)) {
+        shipIndex++;
+        if (key.includes(query, 0) || JSON.stringify(value).includes(query, 0)) {
+          matchingShips[key] = value;
+        }
+
+        // in maximum scale Ships.ships is assumed to hold 30000 ships (30 MB)
+        // parsing and searching all of them takes 1-3 seconds. To avoid blocking
+        // the eventloop we register a promise that allows us to yield control
+        // to the eventloop. Doing this 30000 times means 30000 eventloop iterations until
+        // the ships are filtered, which is a long.. very long time. To avoid this we take
+        // a middleground, where control is yielded after every xth ship.
+        // 'shipsPerCycle' define after how many ships are calculated before yielding control.
+        // High number = fast ui & slow search; Low number = slow ui & fast search.
+        if (!(shipIndex % shipsPerCycle)) await new Promise(resolve => setTimeout(resolve, 0));
       }
-      searchLoaderState = false;
+      Ships.replace(matchingShips);
+    } catch (/** @type {any} */ err) {
+      console.error(err.message);
+      searchException = "ship query failed";
     }
+    searchLoaderState = false;
   }
 </script>
 
