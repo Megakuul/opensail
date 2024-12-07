@@ -35,7 +35,7 @@ import { AdapterError } from "$lib/adapter/error";
  * @property {number} length_over_all
  * @property {number} draft
  * @property {number} beam
- * @property {number} forestray_height
+ * @property {number} forestay_height
  * @property {number} wetted_surface_area
  */
 

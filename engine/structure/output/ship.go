@@ -62,7 +62,7 @@ type ShipConfigDimension struct {
 	LengthOverAll     float64 `json:"length_over_all"`
 	Draft             float64 `json:"draft"`
 	Beam              float64 `json:"beam"`
-	ForestrayHeight   float64 `json:"forestray_height"`
+	ForestayHeight    float64 `json:"forestay_height"`
 	WettedSurfaceArea float64 `json:"wetted_surface_area"`
 }
 

@@ -88,8 +88,8 @@ type ShipSpecDimension struct {
 	Draft float64 `toml:"draft" validate:"required"`
 	// Beam specifies the largest width of the beam in meters
 	Beam float64 `toml:"beam" validate:"required"`
-	// ForestrayHeight specifies the vertical height of the forestray in meters
-	ForestrayHeight float64 `toml:"forestray_height" validate:"required"`
+	// ForestayHeight specifies the vertical height of the forestay in meters
+	ForestayHeight float64 `toml:"forestay_height" validate:"required"`
 	// WettedSurfaceArea specifies the surface area touching the water in square meters
 	WettedSurfaceArea float64 `toml:"wetted_surface_area" validate:"required"`
 }

@@ -5,8 +5,8 @@ length_over_all = ""
 draft = ""
 # Beam specifies the largest width of the beam in meters.
 beam = ""
-# Forestray height (IMSL) specifies the vertical height of the forestray in meters.
-forestray_height = ""
+# Forestay height (IMSL) specifies the vertical height of the forestay in meters.
+forestay_height = ""
 # Wetted surface area (WSS) specifies the surface area touching the water in square meters.
 wetted_surface_area = ""
 
