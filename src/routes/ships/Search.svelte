@@ -21,16 +21,18 @@
 
     searchLoaderState = true;
     searchException = "";
+    searchQuery = query.toLowerCase();
 
     try {
       /** @type {import("$lib/adapter/ships/ships.js").ShipMap} */
       let matchingShips = {};
 
       let shipIndex = 0;
-      for (const [key, value] of Object.entries(Ships.ships)) {
+      for (const [key, valueMap] of Object.entries(Ships.ships)) {
         shipIndex++;
-        if (key.includes(query, 0) || JSON.stringify(value).includes(query, 0)) {
-          matchingShips[key] = value;
+        const value = JSON.stringify(valueMap).toLowerCase()
+        if (key.toLowerCase().includes(searchQuery, 0) || value.includes(searchQuery, 0)) {
+          matchingShips[key] = valueMap;
         }
 
         // in maximum scale Ships.ships is assumed to hold 30000 ships (30 MB)
@@ -56,7 +58,11 @@
   <form class="w-full flex flex-row justify-center items-center gap-2" onsubmit="{() => searchShips(searchQuery)}">
     <input type="text" placeholder="Search for Ship..." bind:value={searchQuery}
     class="{cn("search-box", searchException?"outline outline-red-700/80":"")}" />
-    <Icon icon="svg-spinners:ring-resize" class={searchLoaderState?"opacity-100":"opacity-0"} width="24" height="24" />
+    {#if searchLoaderState}
+      <Icon icon="svg-spinners:ring-resize" width="24" height="24" />
+    {:else}
+      <Icon icon="line-md:search-twotone" width="24" height="24" />
+    {/if}
   </form>
   {#if searchException}
     <p transition:fade class="text-xs font-bold text-red-800/80">{searchException}</p>
