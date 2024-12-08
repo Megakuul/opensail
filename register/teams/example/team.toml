@@ -4,6 +4,18 @@ name = "example"
 # Specifies all team members by name.
 [[members]]
 # Specifies members full name.
-name = ""
+name = "Dussel Duck"
 # Specifies the members roles ['skipper', 'trimmer', 'bowman']
-roles = [""]
+roles = ["bowman", "trimmer"]
+
+[[members]]
+# Specifies members full name.
+name = "Daniel Düsentrieb"
+# Specifies the members roles ['skipper', 'trimmer', 'bowman']
+roles = ["trimmer"]
+
+[[members]]
+# Specifies members full name.
+name = "Donald Duck"
+# Specifies the members roles ['skipper', 'trimmer', 'bowman']
+roles = ["skipper"]

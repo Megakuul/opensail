@@ -15,6 +15,12 @@
   /** @type {import("$lib/adapter/ships/ships.js").ShipConfig | null} */
   let mountedShip = $state(null);
 
+  /** @param {string} id @param {import("$lib/adapter/ships/ships.js").ShipConfig | null} ship */
+  const mountShip = (id, ship) => {
+    window.history.pushState({}, "", `${window.location.pathname}?ship=${id}`);
+    mountedShip = ship;
+  }
+
   onMount(async () => {
     await Versions.load();
     const requestedShip = $page.url.searchParams.get("ship");
@@ -30,6 +36,17 @@
   })
 </script>
 
+<svelte:head>
+	<title>Opensail | Ships</title>
+	<meta name="description" content="Checkout registered Opensail ships!" />
+  <meta property="og:site_name" content="Opensail" />
+	<meta property="og:description" content="Checkout registered Opensail ships!" />
+	<meta property="og:title" content="Opensail - Ships">
+  <meta property="og:type" content="website">
+	<meta property="og:image" content="https://opensail.battleshiper.dev/favicon.png" />
+	<link rel="canonical" href="https://opensail.battleshiper.dev/ships" />
+</svelte:head>
+
 <div class="static flex flex-col items-center min-h-[100vh]">
   <ActionBar></ActionBar>
   <h1 class="title text-7xl sm:text-9xl mt-12" title="Ships">Ships</h1>
@@ -41,10 +58,10 @@
   {#if Ships.ships}
     <div class="flex flex-col gap-6 items-center w-full py-5 max-h-[100vh] overflow-scroll-hidden">
     {#each Object.entries(Ships.ships).slice(0, 20) as [key, value]}
-      <button onclick="{() => mountedShip = value}"
+      <button onclick="{() => mountShip(key, value)}"
         class="relative max-w-[1000px] w-9/12 p-5 flex flex-row gap-2 justify-start items-center cursor-pointer rounded-lg shadow-inner bg-slate-300/20 text-slate-200/70">
         <p class="font-bold text-nowrap overflow-hidden">{value.boat_info.name}</p>
-        <p class="text-nowrap overflow-hidden opacity-65 hidden sm:block"># {key.toUpperCase().replace("_", " ")}</p>
+        <p class="text-nowrap overflow-hidden opacity-65 hidden sm:block"># {key}</p>
         <div class="bg-slate-300/80 rounded-lg px-3 py-1 overflow-hidden ml-auto">
           <p class="font-bold text-nowrap" style="color: {getRatingColor(value.boat_rating.tcc, 3)}">
             {value.boat_rating.tcc?.toFixed(2)}
@@ -78,6 +95,6 @@
     <ExceptionBar class="min-w-[50vw]" title={"Error - Failed to load ships"} message={Ships.error()}></ExceptionBar>
   </div>
   {:else}
-  <Loader class="w-36 h-[70vh]"></Loader>
+    <Loader class="w-36 h-[70vh]"></Loader>
   {/if}
 </div>

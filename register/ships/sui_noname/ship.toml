@@ -1,16 +1,16 @@
 # Specifies the team identifier of the team currently sailing this boat.
-team = "example"
+team = ""
 
 # Info defines general information about the boat. This information does not influence rating.
 [info]
 # Boat information data source [manual = configured in ./info.toml; orc = pulled from orc database with specified 'orc_sailing_no']
-source = "manual"
+source = "orc"
 # Boat certificate identifier when pulled from 'orc' source. This reflects the orc database 'RefNo' / 'Reference Number'. 
-orc_ref_no = ""
+orc_ref_no = "030800034LU"
 
 # Spec defines boat dimensions and measurements. This information is used to derive the rating. 
 [spec]
 # Boat specification data source [manual = configured in ./spec.toml; orc = pulled from orc database with specified 'orc_sailing_no']
-source = "manual"
+source = "orc"
 # Boat certificate identifier when pulled from 'orc' source. This reflects the orc database 'RefNo' / 'Reference Number'. 
-orc_ref_no = ""
+orc_ref_no = "030800034LU"

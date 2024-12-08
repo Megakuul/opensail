@@ -62,9 +62,9 @@ func validateShips(repoPath string, ships map[string]struct{}, shipStruct input.
 			return err
 		}
 
-		ok, err := regexp.MatchString("^[a-z]{3}_\\d+$", ship)
+		ok, err := regexp.MatchString("^[a-z]{3}_[a-z]{1,10}$", ship)
 		if err != nil || !ok {
-			return fmt.Errorf("ship identifier does not match 'sui_420' format")
+			return fmt.Errorf("ship identifier does not match the required format (e.g., 'sui_example')")
 		}
 
 		err = validateShipInfo(shipConfig.Info, path.Join(shipPath, shipStruct.InfoFile))
@@ -100,16 +100,16 @@ func validateShipInfo(info input.ShipConfigInfo, infoPath string) error {
 			return err
 		}
 	case input.SHIP_INFO_ORC:
-		if info.ORCSailingNo == "" {
-			return fmt.Errorf("invalid ship SailNo. '%s'", info.ORCSailingNo)
+		if info.ORCRefNo == "" {
+			return fmt.Errorf("invalid ship orc RefNo. '%s'", info.ORCRefNo)
 		}
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCRefNo)
 		if err != nil {
 			return err
 		}
 
 		if len(downBoatRms.Rms) < 1 {
-			return fmt.Errorf("ship with SailNo. '%s' was not found on orc database", info.ORCSailingNo)
+			return fmt.Errorf("ship with RefNo. '%s' was not found on orc database", info.ORCRefNo)
 		}
 	default:
 		return fmt.Errorf("invalid ship info source '%s'", info.Source)
@@ -136,16 +136,16 @@ func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
 			return err
 		}
 	case input.SHIP_SPEC_ORC:
-		if spec.ORCSailingNo == "" {
-			return fmt.Errorf("invalid ship SailNo. '%s'", spec.ORCSailingNo)
+		if spec.ORCRefNo == "" {
+			return fmt.Errorf("invalid ship orc RefNo. '%s'", spec.ORCRefNo)
 		}
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCRefNo)
 		if err != nil {
 			return err
 		}
 
 		if len(downBoatRms.Rms) < 1 {
-			return fmt.Errorf("ship with SailNo. '%s' was not found on orc database", spec.ORCSailingNo)
+			return fmt.Errorf("ship with RefNo. '%s' was not found on orc database", spec.ORCRefNo)
 		}
 	default:
 		return fmt.Errorf("invalid ship spec source '%s'", spec.Source)

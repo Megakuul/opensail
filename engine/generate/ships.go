@@ -41,27 +41,27 @@ func generateShips(repoPath string, ships map[string]struct{}, shipStruct input.
 		shipPath := path.Join(repoPath, shipStruct.BasePath, ship)
 		shipConfigRaw, err := os.ReadFile(path.Join(shipPath, shipStruct.ConfigFile))
 		if err != nil {
-			return nil, fmt.Errorf("failed to read ship config (team '%s'): %w", ship, err)
+			return nil, fmt.Errorf("failed to read ship config (ship '%s'): %w", ship, err)
 		}
 		shipConfig := &input.ShipConfig{}
 		err = toml.Unmarshal(shipConfigRaw, shipConfig)
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse ship config (team '%s'): %w", ship, err)
+			return nil, fmt.Errorf("failed to parse ship config (ship '%s'): %w", ship, err)
 		}
 
 		outputShipInfo, err := generateShipInfo(shipConfig.Info, path.Join(shipPath, shipStruct.InfoFile))
 		if err != nil {
-			return nil, fmt.Errorf("failed to generate ship info (team '%s'): %w", ship, err)
+			return nil, fmt.Errorf("failed to generate ship info (ship '%s'): %w", ship, err)
 		}
 
-		outputShipSpec, err := generateShipSpec(shipConfig.Spec, path.Join(shipPath, shipStruct.InfoFile))
+		outputShipSpec, err := generateShipSpec(shipConfig.Spec, path.Join(shipPath, shipStruct.SpecFile))
 		if err != nil {
-			return nil, fmt.Errorf("failed to generate ship spec (team '%s'): %w", ship, err)
+			return nil, fmt.Errorf("failed to generate ship spec (ship '%s'): %w", ship, err)
 		}
 
 		outputShipRating, err := generateShipRating(outputShipSpec)
 		if err != nil {
-			return nil, fmt.Errorf("failed to generate ship rating (team '%s'): %w", ship, err)
+			return nil, fmt.Errorf("failed to generate ship rating (ship '%s'): %w", ship, err)
 		}
 
 		shipMap[ship] = output.ShipConfig{
@@ -102,17 +102,17 @@ func generateShipInfo(info input.ShipConfigInfo, infoPath string) (*output.ShipC
 			Designer: shipInfo.Designer,
 		}, nil
 	case input.SHIP_INFO_ORC:
-		if info.ORCSailingNo == "" {
-			return nil, fmt.Errorf("invalid ship SailNo. '%s'", info.ORCSailingNo)
+		if info.ORCRefNo == "" {
+			return nil, fmt.Errorf("invalid ship orc RefNo. '%s'", info.ORCRefNo)
 		}
 
-		downBoatRms, err := orc.GetDownBoatRMS(info.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(info.ORCRefNo)
 		if err != nil {
 			return nil, err
 		}
 
 		if len(downBoatRms.Rms) < 1 {
-			return nil, fmt.Errorf("ship with SailNo. '%s' was not found on orc database", info.ORCSailingNo)
+			return nil, fmt.Errorf("ship with RefNo. '%s' was not found on orc database", info.ORCRefNo)
 		}
 		orcShip := downBoatRms.Rms[0]
 
@@ -165,17 +165,17 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 			},
 		}, nil
 	case input.SHIP_SPEC_ORC:
-		if spec.ORCSailingNo == "" {
-			return nil, fmt.Errorf("invalid ship SailNo. '%s'", spec.ORCSailingNo)
+		if spec.ORCRefNo == "" {
+			return nil, fmt.Errorf("invalid ship orc RefNo. '%s'", spec.ORCRefNo)
 		}
 
-		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCSailingNo)
+		downBoatRms, err := orc.GetDownBoatRMS(spec.ORCRefNo)
 		if err != nil {
 			return nil, err
 		}
 
 		if len(downBoatRms.Rms) < 1 {
-			return nil, fmt.Errorf("ship with SailNo. '%s' was not found on orc database", spec.ORCSailingNo)
+			return nil, fmt.Errorf("ship with RefNo. '%s' was not found on orc database", spec.ORCRefNo)
 		}
 		orcShip := downBoatRms.Rms[0]
 

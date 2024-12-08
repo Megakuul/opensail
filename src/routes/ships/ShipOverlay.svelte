@@ -1,5 +1,4 @@
 <script>
-  import { Versions } from "$lib/data/versions.svelte";
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
   import Ship from "$lib/components/Ship.svelte";
@@ -15,12 +14,18 @@
     mountedShip = $bindable()
   } = $props();
 
+  const unmountShip = () => {
+    window.history.pushState({}, "", `${window.location.pathname}`);
+    selectedShipComponent = null;
+    mountedShip = null;
+  }
+
   /** @type {"spinnaker" | "jib" | "main" | "rigging" | "hull" | null} */
   let selectedShipComponent = $state(null);
 
   /** @param {KeyboardEvent} e */
   const escapeMountedShip = e => {
-    if (e.key === "Escape") mountedShip = null;
+    if (e.key === "Escape") unmountShip();
   }
 
   onMount(async () => {
@@ -30,8 +35,8 @@
 
 {#if mountedShip}
 <div class="absolute inset-0 z-40 flex items-center justify-center bg-slate-900/70">
-  <div class="relative w-full sm:w-[90%] h-full sm:h-[90%] flex flex-col gap-4 p-4 sm:p-16 bg-slate-900/90 rounded-lg">
-    <button class="absolute top-2 right-2 p-2 rounded-lg transition-all duration-700 hover:bg-slate-600/20" onclick="{() => mountedShip = null}">
+  <div class="relative w-full sm:w-[90%] h-full sm:h-[90%] flex flex-col gap-4 p-4 sm:p-16 rounded-none sm:rounded-lg overflow-scroll-hidden bg-slate-900/90">
+    <button class="absolute top-2 right-2 p-2 rounded-lg transition-all duration-700 hover:bg-slate-600/20" onclick="{() => unmountShip()}">
       <Icon icon="fluent-emoji-flat:cross-mark" width="24" height="24" />
     </button>
     <section class="w-full flex flex-row gap-2 items-center justify-start">
@@ -52,68 +57,68 @@
         <span class="bg-slate-600/40 p-1 rounded-lg">{mountedShip.boat_info.designer}</span>. 
       </p>
     </section>
-    <section class="w-full h-[512px] flex flex-col lg:flex-row gap-4 justify-between">
-      <Ship class="w-full" bind:selected="{selectedShipComponent}"></Ship>
-      <div class="w-full p-6 flex flex-col gap-4 rounded-lg bg-slate-600/40 text-slate-100/70">
+    <section class="w-full flex flex-col lg:flex-row gap-4 justify-between">
+      <Ship class="w-full h-[256px] sm:h-[512px]" bind:selected="{selectedShipComponent}"></Ship>
+      <div class="w-full h-[256px] sm:h-[512px] p-6 flex flex-col gap-4 rounded-lg overflow-scroll-hidden bg-slate-600/40 text-slate-100/70">
         {#if selectedShipComponent}
-          <h1 class="p-2 mb-2 text-2xl sm:text-4xl font-bold text-center bg-slate-600/30 rounded-lg">
+          <h1 class=" p-2 mb-2 text-2xl sm:text-4xl font-bold text-center rounded-lg bg-slate-600/30 flex-shrink-0">
             {selectedShipComponent.charAt(0).toUpperCase() + selectedShipComponent.slice(1).toLowerCase()}
           </h1>
           {#if selectedShipComponent === "spinnaker"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Symmetric Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.sail_area.symmetric_spinnaker} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.symmetric_spinnaker} m²</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Asymmetric Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.sail_area.asymmetric_spinnaker} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.asymmetric_spinnaker} m²</p>
             </div>
           {:else if selectedShipComponent === "jib"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.sail_area.jib} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.jib} m²</p>
             </div>
           {:else if selectedShipComponent === "main"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.sail_area.main} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.main} m²</p>
             </div>
           {:else if selectedShipComponent === "rigging"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Forestay Height:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.dimension.forestay_height} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.forestay_height} m</p>
             </div>
           {:else if selectedShipComponent === "hull"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Length overall:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.dimension.length_over_all} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.length_over_all} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Beam:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.dimension.beam} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.beam} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Draft:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.dimension.draft} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.draft} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Wetted area:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.dimension.wetted_surface_area} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.wetted_surface_area} m²</p>
             </div>
           {/if}
         {:else}
           <h1 class="p-2 mb-2 text-2xl sm:text-4xl font-bold text-center bg-slate-600/30 rounded-lg">Misc</h1>
           <div class="flex flex-row justify-between text-base sm:text-2xl">
             <p>Crew Weight:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.misc.max_crew_weight} kg</p>
+            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.max_crew_weight} kg</p>
           </div>
           <div class="flex flex-row justify-between text-base sm:text-2xl">
             <p>Displacement:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.misc.sailing_displacement} kg</p>
+            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.sailing_displacement} kg</p>
           </div>
           <div class="flex flex-row justify-between text-base sm:text-2xl">
             <p>Stability Index:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg ">{mountedShip.boat_spec.misc.stability_index}</p>
+            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.stability_index}</p>
           </div>
         {/if} 
       </div>

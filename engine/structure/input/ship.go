@@ -39,8 +39,8 @@ const (
 type ShipConfigInfo struct {
 	// Source indicates data origin: "manual" or "orc"
 	Source SHIP_INFO_SOURCE `toml:"source" validate:"required"`
-	// ORCSailingNo is the boat identifier in ORC database
-	ORCSailingNo string `toml:"orc_sailing_no"`
+	// ORCRefNo is the boat certificate identifier in ORC database
+	ORCRefNo string `toml:"orc_ref_no"`
 }
 
 type SHIP_SPEC_SOURCE string
@@ -53,8 +53,8 @@ const (
 type ShipConfigSpec struct {
 	// Source indicates data origin: "manual" or "orc"
 	Source SHIP_SPEC_SOURCE `toml:"source" validate:"required"`
-	// ORCSailingNo is the boat identifier in ORC database
-	ORCSailingNo string `toml:"orc_sailing_no"`
+	// ORCRefNo is the boat certificate identifier in ORC database
+	ORCRefNo string `toml:"orc_ref_no"`
 }
 
 // ShipInfo specifies the toml representation of the ship information.

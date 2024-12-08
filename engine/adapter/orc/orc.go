@@ -36,11 +36,11 @@ var CERT_FAMILIES = map[string]struct{}{
 	"NS":  {},
 }
 
-// GetDownBoatRMS executes the DownBoatRMS action on the orc api, querying by sail number.
-func GetDownBoatRMS(sailNo string) (*DownBoatRMS, error) {
+// GetDownBoatRMS executes the DownBoatRMS action on the orc api, querying by orc cert ref number.
+func GetDownBoatRMS(refNo string) (*DownBoatRMS, error) {
 	orcQuery := url.Values{}
 	orcQuery.Add("action", "DownBoatRMS")
-	orcQuery.Add("SailNo", sailNo)
+	orcQuery.Add("RefNo", refNo)
 	orcQuery.Add("ext", "json")
 
 	client := &http.Client{}

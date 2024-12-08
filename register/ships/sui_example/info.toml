@@ -1,10 +1,10 @@
 # Friendly name (e.g. AETHER)
-name = ""
+name = "Example"
 # Boat class (e.g. DEHLER 30 OD)
-class = ""
+class = "Example Class 00"
 # Boat age (specify the vessel's construction year)
-age = ""
+age = "2024"
 # Name of the manufacturer of the boat (e.g. DEHLER)
-builder = ""
+builder = "Example"
 # Name of the designer of the boat (e.g. JUDEL/VROELIJK)
-designer = ""
+designer = "Example"
