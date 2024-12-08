@@ -158,10 +158,8 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 				SymmetricSpinnaker:  shipSpec.SailArea.SymmetricSpinnaker,
 			},
 			Misc: output.ShipConfigMisc{
-				StabilityIndex:       shipSpec.Misc.StabilityIndex,
-				MeasuredDisplacement: shipSpec.Misc.MeasuredDisplacement,
-				SailingDisplacement:  shipSpec.Misc.SailingDisplacement,
-				MaxCrewWeight:        shipSpec.Misc.MaxCrewWeight,
+				SailingDisplacement: shipSpec.Misc.SailingDisplacement,
+				MaxCrewWeight:       shipSpec.Misc.MaxCrewWeight,
 			},
 		}, nil
 	case input.SHIP_SPEC_ORC:

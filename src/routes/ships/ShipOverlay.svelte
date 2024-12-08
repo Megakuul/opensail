@@ -35,7 +35,7 @@
 
 {#if mountedShip}
 <div class="absolute inset-0 z-40 flex items-center justify-center bg-slate-900/70">
-  <div class="relative w-full sm:w-[90%] h-full sm:h-[90%] flex flex-col gap-4 p-4 sm:p-16 rounded-none sm:rounded-lg overflow-scroll-hidden bg-slate-900/90">
+  <div class="relative w-full sm:w-[90%] h-[100dvh] sm:h-[90%] flex flex-col gap-4 p-4 sm:p-16 rounded-none sm:rounded-lg overflow-scroll-hidden bg-slate-900/90">
     <button class="absolute top-2 right-2 p-2 rounded-lg transition-all duration-700 hover:bg-slate-600/20" onclick="{() => unmountShip()}">
       <Icon icon="fluent-emoji-flat:cross-mark" width="24" height="24" />
     </button>

@@ -106,12 +106,8 @@ type ShipSpecSailArea struct {
 }
 
 type ShipSpecMisc struct {
-	// StabilityIndex specifies the stability index of the ship
-	StabilityIndex float64 `toml:"stability_index" validate:"required"`
 	// SailingDisplacement specifies the displacement while sailing in kg
 	SailingDisplacement float64 `toml:"sailing_displacement" validate:"required"`
-	// MeasuredDisplacement specifies the measured displacement in kg
-	MeasuredDisplacement float64 `toml:"measured_displacement" validate:"required"`
 	// MaxCrewWeight specifies the maximum crew weight in kg
 	MaxCrewWeight float64 `toml:"max_crew_weight" validate:"required"`
 }

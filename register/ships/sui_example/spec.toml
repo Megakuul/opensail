@@ -9,6 +9,10 @@ beam = 3
 forestay_height = 7
 # Wetted surface area (WSS) specifies the surface area touching the water in square meters.
 wetted_surface_area = 16
+# Specifies the displacement while sailing in kg.
+sailing_displacement = 1500
+# Specifies the maximum crew weight in kg.
+max_crew_weight = 400
 
 [sail_area]
 # Specifies the area of the main sail in square meters.
@@ -19,13 +23,3 @@ jib = 25
 asymmetric_spinnaker = 0
 # Specifies the area of the largest onboard downwind sail (e.g. spinnaker) in square meters.
 symmetric_spinnaker = 50
-
-[misc]
-# Specifies the stability index of the ship (can be obtained by the manufacturer).
-stability_index = 100
-# Specifies the displacement while sailing in kg.
-sailing_displacement = 1500
-# Specifies the measured displacement in kg.
-measured_displacement = 1000
-# Specifies the maximum crew weight in kg.
-max_crew_weight = 400

@@ -28,7 +28,7 @@ import (
 	"net/url"
 )
 
-const ORC_BASE_ENDPOINT = "http://data.orc.org/public/WPub.dll"
+const ORC_BASE_ENDPOINT = "https://data.orc.org/public/WPub.dll"
 
 var CERT_FAMILIES = map[string]struct{}{
 	"ORC": {},

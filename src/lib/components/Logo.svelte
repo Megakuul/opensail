@@ -52,8 +52,7 @@
 
     filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
     fill: url(#gradient);
-    stroke: var(--secondary-bg-color);
-    stroke-opacity: 0.2;
+    stroke: rgba(255, 255, 255, 0.7);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -62,7 +61,6 @@
 
   .letter:hover {
     cursor: pointer;
-    stroke-opacity: 1;
     stroke-width: 4;
   }
 
@@ -91,8 +89,7 @@
   #hull {
     filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
     fill: url(#gradient);
-    stroke: var(--secondary-bg-color);
-    stroke-opacity: 0.2;
+    stroke: rgba(255, 255, 255, 0.7);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -102,7 +99,6 @@
 
   #hull:hover {
     cursor: pointer;
-    stroke-opacity: 1;
     stroke-width: 4;
   }
 
@@ -121,8 +117,7 @@
   #jib {
     filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
     fill: url(#gradient);
-    stroke: var(--secondary-bg-color);
-    stroke-opacity: 0.2;
+    stroke: rgba(255, 255, 255, 0.7);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -132,15 +127,13 @@
 
   #jib:hover {
     cursor: pointer;
-    stroke-opacity: 1;
     stroke-width: 4;
   }
 
   #mainsail {
     filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.2));
     fill: url(#gradient);
-    stroke: var(--secondary-bg-color);
-    stroke-opacity: 0.2;
+    stroke: rgba(255, 255, 255, 0.7);
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -150,7 +143,6 @@
 
   #mainsail:hover {
     cursor: pointer;
-    stroke-opacity: 1;
     stroke-width: 4;
   }
 

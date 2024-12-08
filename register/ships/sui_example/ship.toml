@@ -8,9 +8,14 @@ source = "manual"
 # Boat certificate identifier when pulled from 'orc' source. This reflects the orc database 'RefNo' / 'Reference Number'. 
 orc_ref_no = ""
 
-# Spec defines boat dimensions and measurements. This information is used to derive the rating. 
-[spec]
+# General Spec defines generalized boat dimensions and measurements. This information is used to derive the rating. 
+[general_spec]
 # Boat specification data source [manual = configured in ./spec.toml; orc = pulled from orc database with specified 'orc_sailing_no']
 source = "manual"
 # Boat certificate identifier when pulled from 'orc' source. This reflects the orc database 'RefNo' / 'Reference Number'. 
 orc_ref_no = ""
+
+# Custom Spec defines customized boat 
+[custom_spec]
+# Boat specification data source [manual = configured in ./spec.toml]
+source = "manual"
