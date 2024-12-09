@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import Ship from "$lib/components/Ship.svelte";
   import { getRatingColor } from "./rating";
+  import { goto } from "$app/navigation";
 
   /**
    * @typedef Props
@@ -11,13 +12,12 @@
 
   /** @type {Props} */
   let { 
-    mountedShip = $bindable()
+    mountedShip
   } = $props();
 
   const unmountShip = () => {
-    window.history.pushState({}, "", `${window.location.pathname}`);
     selectedShipComponent = null;
-    mountedShip = null;
+    goto(`${window.location.pathname}`);
   }
 
   /** @type {"spinnaker" | "jib" | "main" | "rigging" | "hull" | null} */

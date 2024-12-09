@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "$app/navigation";
   import Icon from "@iconify/svelte";
   import { onMount } from "svelte";
 
@@ -9,12 +10,11 @@
 
   /** @type {Props} */
   let { 
-    mountedTeam = $bindable()
+    mountedTeam
   } = $props();
 
   const unmountTeam = () => {
-    window.history.pushState({}, "", `${window.location.pathname}`);
-    mountedTeam = null;
+    goto(`${window.location.pathname}`, {});
   }
 
   /** @param {KeyboardEvent} e */

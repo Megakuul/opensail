@@ -1,7 +1,0 @@
-[material]
-# LOA specifies the length in meters from the foremost to the rearmost point of the ship.
-gfk_percentage = 40
-
-cfk_percentage = 30
-# TODO:
-wood_percentage = 20

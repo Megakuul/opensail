@@ -11,28 +11,33 @@
   import ShipOverlay from "./ShipOverlay.svelte";
   import { getRatingColor } from "./rating";
   import { page } from '$app/stores';
+  import { goto, onNavigate, pushState } from "$app/navigation";
 
   /** @type {import("$lib/adapter/ships/ships.js").ShipConfig | null} */
   let mountedShip = $state(null);
 
   /** @param {string} id @param {import("$lib/adapter/ships/ships.js").ShipConfig | null} ship */
   const mountShip = (id, ship) => {
-    window.history.pushState({}, "", `${window.location.pathname}?ship=${id}`);
+    goto(`${window.location.pathname}?ship=${id}`);
     mountedShip = ship;
   }
 
   onMount(async () => {
     await Versions.load();
-    const requestedShip = $page.url.searchParams.get("ship");
-    if (requestedShip) {
-      await Ships.load(Versions.getLatest());
-      mountedShip = Ships.ships?.[requestedShip] ?? null;
-    }
   });
 
   $effect(() => {
     Manifest.load(Versions.getLatest());
     Ships.load(Versions.getLatest());
+  })
+
+  $effect(() => {
+    const requestedShip = $page.url.searchParams.get("ship");
+    if (requestedShip) {
+      mountedShip = Ships.ships?.[requestedShip] ?? null;
+    } else {
+      mountedShip = null;
+    }
   })
 </script>
 
@@ -53,7 +58,7 @@
 
   <Search class="my-10"></Search>
 
-  <ShipOverlay bind:mountedShip={mountedShip}></ShipOverlay>
+  <ShipOverlay mountedShip={mountedShip}></ShipOverlay>
 
   {#if Ships.ships}
     <div class="flex flex-col gap-6 items-center w-full py-5 max-h-[100vh] overflow-scroll-hidden">

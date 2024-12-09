@@ -25,8 +25,10 @@ type ShipConfig struct {
 	Team string `toml:"team" validate:"required"`
 	// Info contains general boat information that doesn't influence rating
 	Info ShipConfigInfo `toml:"info" validate:"required"`
-	// Spec contains boat dimensions and measurements used for rating
-	Spec ShipConfigSpec `toml:"spec" validate:"required"`
+	// BaseSpec contains boat dimensions and measurements used for rating
+	BaseSpec ShipConfigBaseSpec `toml:"base_spec" validate:"required"`
+	// ExtraSpec contains additional boat characteristics used to improve rating
+	ExtraSpec ShipConfigExtraSpec `toml:"extra_spec" validate:"required"`
 }
 
 type SHIP_INFO_SOURCE string
@@ -43,18 +45,29 @@ type ShipConfigInfo struct {
 	ORCRefNo string `toml:"orc_ref_no"`
 }
 
-type SHIP_SPEC_SOURCE string
+type SHIP_BASE_SPEC_SOURCE string
 
 const (
-	SHIP_SPEC_MANUAL SHIP_SPEC_SOURCE = "manual"
-	SHIP_SPEC_ORC    SHIP_SPEC_SOURCE = "orc"
+	SHIP_BASE_SPEC_MANUAL SHIP_BASE_SPEC_SOURCE = "manual"
+	SHIP_BASE_SPEC_ORC    SHIP_BASE_SPEC_SOURCE = "orc"
 )
 
-type ShipConfigSpec struct {
+type ShipConfigBaseSpec struct {
 	// Source indicates data origin: "manual" or "orc"
-	Source SHIP_SPEC_SOURCE `toml:"source" validate:"required"`
+	Source SHIP_BASE_SPEC_SOURCE `toml:"source" validate:"required"`
 	// ORCRefNo is the boat certificate identifier in ORC database
 	ORCRefNo string `toml:"orc_ref_no"`
+}
+
+type SHIP_EXTRA_SPEC_SOURCE string
+
+const (
+	SHIP_EXTRA_SPEC_MANUAL SHIP_EXTRA_SPEC_SOURCE = "manual"
+)
+
+type ShipConfigExtraSpec struct {
+	// Source indicates data origin: "manual"
+	Source SHIP_EXTRA_SPEC_SOURCE `toml:"source" validate:"required"`
 }
 
 // ShipInfo specifies the toml representation of the ship information.
@@ -71,17 +84,15 @@ type ShipInfo struct {
 	Designer string `toml:"designer"`
 }
 
-// ShipSpec specifies the toml representation of the ship specification.
-type ShipSpec struct {
+// ShipBaseSpec specifies the toml representation of the ship base specification.
+type ShipBaseSpec struct {
 	// Dimension contains physical measurements of the boat
-	Dimension ShipSpecDimension `toml:"dimension" validate:"required"`
+	Dimension ShipBaseSpecDimension `toml:"dimension" validate:"required"`
 	// SailArea contains measurements for different sail types
-	SailArea ShipSpecSailArea `toml:"sail_area" validate:"required"`
-	// Misc contains various other specifications
-	Misc ShipSpecMisc `toml:"misc" validate:"required"`
+	SailArea ShipBaseSpecSailArea `toml:"sail_area" validate:"required"`
 }
 
-type ShipSpecDimension struct {
+type ShipBaseSpecDimension struct {
 	// LengthOverAll specifies the length in meters from the foremost to the rearmost point of the ship
 	LengthOverAll float64 `toml:"length_over_all" validate:"required"`
 	// Draft specifies the vertical distance from the bottom of the keel to the waterline in meters
@@ -92,9 +103,13 @@ type ShipSpecDimension struct {
 	ForestayHeight float64 `toml:"forestay_height" validate:"required"`
 	// WettedSurfaceArea specifies the surface area touching the water in square meters
 	WettedSurfaceArea float64 `toml:"wetted_surface_area" validate:"required"`
+	// SailingDisplacement specifies the displacement while sailing in kg
+	SailingDisplacement float64 `toml:"sailing_displacement" validate:"required"`
+	// MaxCrewWeight specifies the maximum crew weight in kg
+	MaxCrewWeight float64 `toml:"max_crew_weight" validate:"required"`
 }
 
-type ShipSpecSailArea struct {
+type ShipBaseSpecSailArea struct {
 	// Main specifies the area of the main sail in square meters
 	Main float64 `toml:"main" validate:"required"`
 	// Jib specifies the area of the largest onboard jib sail in square meters
@@ -105,9 +120,55 @@ type ShipSpecSailArea struct {
 	SymmetricSpinnaker float64 `toml:"symmetric_spinnaker" validate:"required"`
 }
 
-type ShipSpecMisc struct {
-	// SailingDisplacement specifies the displacement while sailing in kg
-	SailingDisplacement float64 `toml:"sailing_displacement" validate:"required"`
-	// MaxCrewWeight specifies the maximum crew weight in kg
-	MaxCrewWeight float64 `toml:"max_crew_weight" validate:"required"`
+// ShipExtraSpec specifies the toml representation of the ship extra specification.
+type ShipExtraSpec struct {
+	// Design holds information about the ships design characteristics
+	Design ShipExtraSpecDesign `toml:"design" validate:"required"`
+	// Composition specifies how the ships weight is composed
+	Composition ShipExtraSpecComposition `toml:"composition" validate:"required"`
+}
+
+type SHIP_EXTRA_SPEC_DESIGN_MODE string
+
+const (
+	SHIP_EXTRA_SPEC_DESIGN_DISPLACE  SHIP_EXTRA_SPEC_DESIGN_MODE = "displace"
+	SHIP_EXTRA_SPEC_DESIGN_SEMI      SHIP_EXTRA_SPEC_DESIGN_MODE = "semi"
+	SHIP_EXTRA_SPEC_DESIGN_PLANING   SHIP_EXTRA_SPEC_DESIGN_MODE = "planing"
+	SHIP_EXTRA_SPEC_DESIGN_HYDROFOIL SHIP_EXTRA_SPEC_DESIGN_MODE = "hydrofoil"
+)
+
+type SHIP_EXTRA_SPEC_DESIGN_STABILIZATION string
+
+const (
+	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_HULL = "foils"
+	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "daggerboard"
+	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "centreboard"
+	SHIP_EXTRA_SPEC_DESIGN_KEEL        SHIP_EXTRA_SPEC_DESIGN_HULL = "keel"
+)
+
+type SHIP_EXTRA_SPEC_DESIGN_HULL string
+
+const (
+	SHIP_EXTRA_SPEC_DESIGN_MONO  SHIP_EXTRA_SPEC_DESIGN_HULL = "manual"
+	SHIP_EXTRA_SPEC_DESIGN_MULTI SHIP_EXTRA_SPEC_DESIGN_HULL = "multi"
+)
+
+type ShipExtraSpecDesign struct {
+	// Mode specifies the type of the hull design/mode [displace; semi; planing; hydrofoil;]
+	Mode SHIP_EXTRA_SPEC_DESIGN_MODE `toml:"mode"`
+	// Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; keel;]
+	Stabilization SHIP_EXTRA_SPEC_DESIGN_STABILIZATION `toml:"stabilization"`
+	// Hull specifies the hull type [mono; multi;]
+	Hull SHIP_EXTRA_SPEC_DESIGN_HULL `toml:"hull"`
+}
+
+type ShipExtraSpecComposition struct {
+	// KeelPercentage specifies how much weight of the ship is keel
+	KeelPercentage float64 `toml:"keel_percentage"`
+	// CfkPercentage specifies how much weight of the ship is cfk
+	CfkPercentage float64 `toml:"cfk_percentage"`
+	// GfkPercentage specifies how much weight of the ship is gfk
+	GfkPercentage float64 `toml:"gfk_percentage"`
+	// WoodPercentage specifies how much weight of the ship is wood
+	WoodPercentage float64 `toml:"wood_percentage"`
 }

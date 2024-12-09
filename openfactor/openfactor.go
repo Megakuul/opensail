@@ -24,6 +24,44 @@ func Version() string {
 	return "v0.0.1"
 }
 
+type MODE int64
+
+const (
+	MODE_DEFAULT MODE = iota // default==unspecified provides 0 extra rating
+	MODE_HYDROFOIL
+	MODE_PLANING
+	MODE_SEMI
+	MODE_DISPLACE
+)
+
+type STABILIZATION int64
+
+const (
+	STABILIZATION_DEFAULT STABILIZATION = iota // default==unspecified provides 0 extra rating
+	STABILIZATION_KEEL
+	STABILIZATION_CENTREBOARD
+	STABILIZATION_DAGGERBOARD
+	STABILIZATION_FOILS
+)
+
+type HULL int64
+
+const (
+	HULL_DEFAULT HULL = iota // default==unspecified provides 0 extra rating
+	HULL_MULTI
+	HULL_MONO
+)
+
+type MATERIAL int64
+
+const (
+	MATERIAL_DEFAULT MATERIAL = iota // default==unspecified provides 0 extra rating
+	MATERIAL_KEEL
+	MATERIAL_CFK
+	MATERIAL_GFK
+	MATERIAL_WOOD
+)
+
 // EvaluationInput specifies data that is used to derive the rating.
 type EvaluationInput struct {
 	// LOA specifies the ship length in meters
@@ -52,14 +90,20 @@ type EvaluationInput struct {
 	// largest symmetric downwind sail in square meters.
 	SymmetricSpinnakerArea float64
 
-	// StabilityIndex is a unit specified by the manufacturer
-	// it determines the stability of a ship.
-	StabilityIndex float64
-	// Displacement specifies the ship displacement in KG
-	// (with crew on average speed)
+	// Displacement specifies the ship displacement in KG (this is the same as the weight of the ship)
 	Displacement float64
 	// CrewWeight specifies the weight of the crew on the ship.
 	CrewWeight float64
+
+	// Mode specifies the hull operation mode.
+	Mode MODE
+	// Stabilization specifies how the ship is stabilized.
+	Stabilization STABILIZATION
+	// Hull specifies the hull design of the ship.
+	Hull HULL
+
+	// Composition specifies how the ship is composed.
+	Composition map[MATERIAL]float64
 }
 
 type EvaluationOutput struct {

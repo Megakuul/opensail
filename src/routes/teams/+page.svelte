@@ -9,28 +9,34 @@
   import { onMount } from "svelte";
   import TeamOverlay from "./TeamOverlay.svelte";
   import Search from "./Search.svelte";
+  import { goto } from "$app/navigation";
 
   /** @type {import("$lib/adapter/teams/teams.js").TeamConfig | null} */
   let mountedTeam = $state(null);
 
   /** @param {string} name @param {import("$lib/adapter/teams/teams.js").TeamConfig | null} team */
   const mountTeam = (name, team) => {
-    window.history.pushState({}, "", `${window.location.pathname}?team=${name}`);
+    goto(`${window.location.pathname}?team=${name}`);
     mountedTeam = team;
   }
 
   onMount(async () => {
     await Versions.load();
-    const requestedTeam = $page.url.searchParams.get("team");
-    if (requestedTeam) {
-      await Teams.load(Versions.getLatest());
-      mountedTeam = Teams.teams?.[requestedTeam] ?? null;
-    }
+
   });
 
   $effect(() => {
     Manifest.load(Versions.getLatest());
     Teams.load(Versions.getLatest());
+  })
+
+  $effect(() => {
+    const requestedTeam = $page.url.searchParams.get("team");
+    if (requestedTeam) {
+      mountedTeam = Teams.teams?.[requestedTeam] ?? null;
+    } else {
+      mountedTeam = null;
+    }
   })
 </script>
 
@@ -51,7 +57,7 @@
 
   <Search class="my-10"></Search>
 
-  <TeamOverlay bind:mountedTeam={mountedTeam}></TeamOverlay>
+  <TeamOverlay mountedTeam={mountedTeam}></TeamOverlay>
 
   {#if Teams.teams}
     <div class="flex flex-col gap-6 items-center w-full py-5 max-h-[100vh] overflow-scroll-hidden">

@@ -22,13 +22,14 @@
 		<h2 class="text-xl sm:text-4xl text-slate-100/50 ml-4 sm:ml-32 select-none">Your Comprehensive Regatta Rating System</h2>
 	</section>
 
-	<section class="flex flex-col gap-4 mx-4 p-4 max-w-[1100px] rounded-lg bg-slate-900/5 shadow-inner text-slate-100/60 text-xs sm:text-xl">
+	<section class="relative flex flex-col gap-4 mx-4 p-4 mt-0 lg:mt-20 max-w-[1100px] text-slate-100/60 text-xs sm:text-xl text-justify">
+		<div class="absolute hidden xl:block top-[-30px] left-[-40px] text-9xl font-serif text-slate-100/30">“</div>
 		<p>
 			Opensail is an <a class="font-bold underline" href="https://github.com/megakuul/opensail">opensource</a>
-			ship database that offers a <b>sophisticated</b> handicap system for mixed regattas.
+			ship database that offers a <b>refined</b> and <b>sophisticated</b> handicap system for mixed regattas.
 		</p>
 		<p>
-			Let’s be honest... Most mixed inland regattas rely on complex, opaque and often unfair handicap systems.<br>
+			Let’s be honest... Most mixed inland regattas rely on complex, opaque and often unfair handicap systems.
 			Building a system that everyone agrees on? That’s about as easy as assembling a nuclear submarine in your backyard.
 		</p>
 		<p>
@@ -41,7 +42,7 @@
 	<section class="w-full flex flex-col lg:flex-row-reverse items-center justify-around my-10 sm:my-40 text-slate-100/60">
 		<h1 class="text-4xl sm:text-6xl font-bold text-center text-nowrap my-10"><a href="/ships" class="hover:underline">Registered Ships</a></h1>
 		<div class="wrapper">
-			<div class="box-right w-96 h-96 rounded-lg p-6 bg-slate-900/70 border-[1px] border-slate-100 shadow-xl shadow-slate-100/20">
+			<div class="box-right w-96 h-96 rounded-lg p-6 bg-slate-900/30 border-[1px] border-slate-100 shadow-xl shadow-slate-100/20">
 				<h2 class="text-xl sm:text-2xl font-bold mb-3">Sailing Ship</h2>
 				<p class="mb-3">Find <a class="font-bold underline" href="/ships">registered vessels</a> and browse their specifications.</p>
 				<center class="my-3 animate-pulse">
@@ -57,7 +58,7 @@
 	<section class="w-full flex flex-col lg:flex-row items-center justify-around my-10 sm:my-40 text-slate-100/60">
 		<h1 class="text-4xl sm:text-6xl font-bold text-center text-nowrap my-10"><a href="/teams" class="hover:underline">Registered Teams</a></h1>
 		<div class="wrapper">
-			<div class="box-left w-96 h-96 rounded-lg p-6 bg-slate-900/70 border-[1px] border-slate-100 shadow-xl shadow-slate-100/20">
+			<div class="box-left w-96 h-96 rounded-lg p-6 bg-slate-900/30 border-[1px] border-slate-100 shadow-xl shadow-slate-100/20">
 				<h2 class="text-xl sm:text-2xl font-bold mb-3">Crew</h2>
 				<p class="mb-3">Find <a class="font-bold underline" href="/teams">registered teams</a> and browse their roles.</p>
 				<center class="my-3 animate-pulse">
