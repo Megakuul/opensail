@@ -119,11 +119,13 @@ type ShipConfigExtraSpecDesign struct {
 }
 
 type ShipConfigExtraSpecComposition struct {
-	KeelPercentage float64 `toml:"keel_percentage"`
-	CfkPercentage  float64 `toml:"cfk_percentage"`
-	AluPercentage  float64 `toml:"alu_percentage"`
-	GfkPercentage  float64 `toml:"gfk_percentage"`
-	WoodPercentage float64 `toml:"wood_percentage"`
+	BallastPercentage float64 `toml:"ballast_percentage"`
+	CfkPercentage     float64 `toml:"cfk_percentage"`
+	AluPercentage     float64 `toml:"alu_percentage"`
+	GfkPercentage     float64 `toml:"gfk_percentage"`
+	WoodPercentage    float64 `toml:"wood_percentage"`
+	EnginePercentage  float64 `toml:"engine_percentage"`
+	AmenityPercentage float64 `toml:"amenity_percentage"`
 }
 
 type ShipConfigRating struct {

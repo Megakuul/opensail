@@ -163,8 +163,8 @@ type ShipExtraSpecDesign struct {
 }
 
 type ShipExtraSpecComposition struct {
-	// KeelPercentage specifies how much weight of the ship is keel
-	KeelPercentage float64 `toml:"keel_percentage"`
+	// BallastPercentage specifies how much weight of the ship is pure ballast (usually lead)
+	BallastPercentage float64 `toml:"keel_percentage"`
 	// CfkPercentage specifies how much weight of the ship is cfk
 	CfkPercentage float64 `toml:"cfk_percentage"`
 	// AluPercentage specifies how much weight of the ship is aluminium
@@ -173,4 +173,8 @@ type ShipExtraSpecComposition struct {
 	GfkPercentage float64 `toml:"gfk_percentage"`
 	// WoodPercentage specifies how much weight of the ship is wood
 	WoodPercentage float64 `toml:"wood_percentage"`
+	// EnginePercentage specifies how much weight of the ship is engine
+	EnginePercentage float64 `toml:"engine_percentage"`
+	// AmenityPercentage specifies how much weight of the ship is amenities
+	AmenityPercentage float64 `toml:"amenity_percentage"`
 }

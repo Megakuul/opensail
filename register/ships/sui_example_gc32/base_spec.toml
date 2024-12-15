@@ -1,25 +1,25 @@
 [dimension]
 # LOA specifies the length in meters from the foremost to the rearmost point of the ship.
-length_over_all = 8
+length_over_all = 10
 # Draft specifies the vertical distance from the bottom of the keel to the waterline in meters.
-draft = 2.5
+draft = 2.1
 # Beam specifies the largest width of the beam in meters.
-beam = 3
+beam = 6
 # Forestay height (IMSL) specifies the vertical height of the forestay in meters.
-forestay_height = 7
+forestay_height = 16.5
 # Wetted surface area (WSS) specifies the surface area touching the water in square meters.
-wetted_surface_area = 16
+wetted_surface_area = 8.9
 # Specifies the displacement while sailing in kg.
-sailing_displacement = 1500
+sailing_displacement = 975
 # Specifies the maximum crew weight in kg.
-max_crew_weight = 400
+max_crew_weight = 437.5
 
 [sail_area]
 # Specifies the area of the main sail in square meters.
-main = 30
+main = 60
 # Specifies the area of the largest onboard jib sail in square meters.
-jib = 25
+jib = 23.5
 # Specifies the area of the largest onboard downwind sail (e.g. gennaker or code zero) in square meters.
-asymmetric_spinnaker = 0
+asymmetric_spinnaker = 90
 # Specifies the area of the largest onboard downwind sail (e.g. spinnaker) in square meters.
-symmetric_spinnaker = 50
+symmetric_spinnaker = 0

@@ -1,0 +1,19 @@
+# Design holds information about the ships design characteristics
+[design]
+# Mode specifies the type of the hull design/mode [displace; semi; planing; hydrofoil;]
+mode = "hydrofoil"
+# Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; keel;]
+stabilization = "foils"
+# Hull specifies the hull type [mono; multi;]
+hull = "multi"
+
+# Composition specifies how the ships weight is composed. 
+# Weight not listed here is counted as "default" material, which means material that gets no additional bonus (e.g. sails).
+[composition]
+ballast_percentage = 0 # specifies the weight percentage of the keel
+cfk_percentage = 98 # specifies the weight percentage of carbon fibre reinforced polymer
+alu_percentage = 0 # specifies the weight percentage of aluminium
+gfk_percentage = 0 # specifies the weight percentage of fibreglass reinforced plastic
+wood_percentage = 0 # specifies the weight percentage of wood
+engine_percentage = 0 # specifies the weight percentage of the engine
+amenity_percentage = 0 # specifies the weight percentage of amenities (furniture etc)

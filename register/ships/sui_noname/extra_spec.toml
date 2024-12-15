@@ -2,13 +2,14 @@
 [design]
 # Mode specifies the type of the hull design/mode [displace; semi; planing; hydrofoil;]
 mode = "semi"
-# Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; keel;]
-stabilization = "keel"
+# Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; finkeel; bulbkeel; fullkeel;]
+stabilization = "finkeel"
 # Hull specifies the hull type [mono; multi;]
 hull = "mono"
 
 # Composition specifies how the ships weight is composed.
 [composition]
-keel_percentage = 15
+ballast_percentage = 15
 alu_percentage = 5
 gfk_percentage = 78
+engine_percentage = 1

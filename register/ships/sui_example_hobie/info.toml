@@ -1,0 +1,10 @@
+# Friendly name (e.g. AETHER)
+name = "Example Hobie"
+# Boat class (e.g. DEHLER 30 OD)
+class = "Hobie Tiger 18"
+# Boat age (specify the vessel's construction year)
+age = "1995"
+# Name of the manufacturer of the boat (e.g. DEHLER)
+builder = "Hobie Cat Europe"
+# Name of the designer of the boat (e.g. JUDEL/VROELIJK)
+designer = "Jacques Valer"

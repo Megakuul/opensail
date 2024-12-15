@@ -1,7 +1,7 @@
 # Design holds information about the ships design characteristics
 [design]
 # Mode specifies the type of the hull design/mode [displace; semi; planing; hydrofoil;]
-mode = "semi"
+mode = "displace"
 # Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; finkeel; bulbkeel; fullkeel;]
 stabilization = "bulbkeel"
 # Hull specifies the hull type [mono; multi;]
@@ -9,8 +9,8 @@ hull = "mono"
 
 # Composition specifies how the ships weight is composed.
 [composition]
-ballast_percentage = 65
-cfk_percentage = 1
+ballast_percentage = 23
 alu_percentage = 3
-gfk_percentage = 30
-engine_percentage = 1
+gfk_percentage = 55
+engine_percentage = 3
+amenity_percentage = 12

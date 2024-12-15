@@ -225,11 +225,13 @@ func generateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) (*ou
 				Hull:          output.SHIP_EXTRA_SPEC_DESIGN_HULL(shipSpec.Design.Hull),
 			},
 			Composition: output.ShipConfigExtraSpecComposition{
-				KeelPercentage: shipSpec.Composition.KeelPercentage,
-				CfkPercentage:  shipSpec.Composition.CfkPercentage,
-				AluPercentage:  shipSpec.Composition.AluPercentage,
-				GfkPercentage:  shipSpec.Composition.GfkPercentage,
-				WoodPercentage: shipSpec.Composition.WoodPercentage,
+				BallastPercentage: shipSpec.Composition.BallastPercentage,
+				CfkPercentage:     shipSpec.Composition.CfkPercentage,
+				AluPercentage:     shipSpec.Composition.AluPercentage,
+				GfkPercentage:     shipSpec.Composition.GfkPercentage,
+				WoodPercentage:    shipSpec.Composition.WoodPercentage,
+				EnginePercentage:  shipSpec.Composition.EnginePercentage,
+				AmenityPercentage: shipSpec.Composition.AmenityPercentage,
 			},
 		}, nil
 	default:
