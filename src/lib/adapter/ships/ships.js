@@ -8,7 +8,8 @@ import { AdapterError } from "$lib/adapter/error";
  * @typedef {Object} ShipConfig
  * @property {string} team
  * @property {ShipConfigInfo} boat_info
- * @property {ShipConfigSpec} boat_spec
+ * @property {ShipConfigBaseSpec} boat_base_spec
+ * @property {ShipConfigExtraSpec} boat_extra_spec
  * @property {ShipConfigRating} boat_rating
  */
 
@@ -23,24 +24,25 @@ import { AdapterError } from "$lib/adapter/error";
  */
 
 /**
- * @typedef {Object} ShipConfigSpec
+ * @typedef {Object} ShipConfigBaseSpec
  * @property {string} source
- * @property {ShipConfigDimension} dimension
- * @property {ShipConfigSailArea} sail_area
- * @property {ShipConfigMisc} misc
+ * @property {ShipConfigBaseSpecDimension} dimension
+ * @property {ShipConfigBaseSpecSailArea} sail_area
  */
 
 /**
- * @typedef {Object} ShipConfigDimension
+ * @typedef {Object} ShipConfigBaseSpecDimension
  * @property {number} length_over_all
  * @property {number} draft
  * @property {number} beam
  * @property {number} forestay_height
  * @property {number} wetted_surface_area
+ * @property {number} displacement
+ * @property {number} crew_weight
  */
 
 /**
- * @typedef {Object} ShipConfigSailArea
+ * @typedef {Object} ShipConfigBaseSpecSailArea
  * @property {number} main
  * @property {number} jib
  * @property {number} asymmetric_spinnaker
@@ -48,17 +50,36 @@ import { AdapterError } from "$lib/adapter/error";
  */
 
 /**
- * @typedef {Object} ShipConfigMisc
- * @property {number} stability_index
- * @property {number} sailing_displacement
- * @property {number} measured_displacement
- * @property {number} max_crew_weight
+ * @typedef {Object} ShipConfigExtraSpec
+ * @property {string} source
+ * @property {ShipConfigExtraSpecDesign} design
+ * @property {ShipConfigExtraSpecComposition} composition
+ */
+
+/**
+ * @typedef {Object} ShipConfigExtraSpecDesign
+ * @property {string} mode
+ * @property {string} stabilization
+ * @property {string} hull
+ */
+
+/**
+ * @typedef {Object} ShipConfigExtraSpecComposition
+ * @property {number} keel_percentage
+ * @property {number} cfk_percentage
+ * @property {number} alu_percentage
+ * @property {number} gfk_percentage
+ * @property {number} wood_percentage
  */
 
 /**
  * @typedef {Object} ShipConfigRating
  * @property {string} version
+ * @property {number} lifter
  * @property {number} tcc
+ * @property {number} speed_factor
+ * @property {number} agility_factor
+ * @property {number} stabilization_factor
  */
 
 /**

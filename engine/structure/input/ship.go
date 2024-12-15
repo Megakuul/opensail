@@ -140,10 +140,10 @@ const (
 type SHIP_EXTRA_SPEC_DESIGN_STABILIZATION string
 
 const (
-	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_HULL = "foils"
-	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "daggerboard"
-	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "centreboard"
-	SHIP_EXTRA_SPEC_DESIGN_KEEL        SHIP_EXTRA_SPEC_DESIGN_HULL = "keel"
+	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "foils"
+	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "daggerboard"
+	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "centreboard"
+	SHIP_EXTRA_SPEC_DESIGN_KEEL        SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "keel"
 )
 
 type SHIP_EXTRA_SPEC_DESIGN_HULL string
@@ -167,6 +167,8 @@ type ShipExtraSpecComposition struct {
 	KeelPercentage float64 `toml:"keel_percentage"`
 	// CfkPercentage specifies how much weight of the ship is cfk
 	CfkPercentage float64 `toml:"cfk_percentage"`
+	// AluPercentage specifies how much weight of the ship is aluminium
+	AluPercentage float64 `toml:"alu_percentage"`
 	// GfkPercentage specifies how much weight of the ship is gfk
 	GfkPercentage float64 `toml:"gfk_percentage"`
 	// WoodPercentage specifies how much weight of the ship is wood

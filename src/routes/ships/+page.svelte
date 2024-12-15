@@ -73,7 +73,7 @@
           </p>
         </div>
 
-        {#if value.boat_spec.source === "orc"}
+        {#if value.boat_base_spec?.source === "orc"}
           <div class="absolute bottom-[-3px] right-[-3px] h-3 flex flex-row items-center gap-1 p-2 rounded-md bg-emerald-600/90">
             <span class="text-sm font-bold">orc</span>
             <Icon icon="ic:twotone-verified" width="12" height="12" />

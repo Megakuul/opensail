@@ -38,10 +38,11 @@ func main() {
 			ConfigFile: "team.toml",
 		},
 		Ship: input.ShipStructure{
-			BasePath:   "register/ships/",
-			ConfigFile: "ship.toml",
-			InfoFile:   "info.toml",
-			SpecFile:   "spec.toml",
+			BasePath:      "register/ships/",
+			ConfigFile:    "ship.toml",
+			InfoFile:      "info.toml",
+			BaseSpecFile:  "base_spec.toml",
+			ExtraSpecFile: "extra_spec.toml",
 		},
 	}, &output.Structure{
 		Manifest: output.ManifestStructure{

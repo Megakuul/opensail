@@ -67,59 +67,55 @@
           {#if selectedShipComponent === "spinnaker"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Symmetric Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.symmetric_spinnaker} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.sail_area.symmetric_spinnaker} m²</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Asymmetric Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.asymmetric_spinnaker} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.sail_area.asymmetric_spinnaker} m²</p>
             </div>
           {:else if selectedShipComponent === "jib"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.jib} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.sail_area.jib} m²</p>
             </div>
           {:else if selectedShipComponent === "main"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Apex Sail:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.sail_area.main} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.sail_area.main} m²</p>
             </div>
           {:else if selectedShipComponent === "rigging"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Forestay Height:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.forestay_height} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.forestay_height} m</p>
             </div>
           {:else if selectedShipComponent === "hull"}
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Length overall:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.length_over_all} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.length_over_all} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Beam:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.beam} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.beam} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Draft:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.draft} m</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.draft} m</p>
             </div>
             <div class="flex flex-row justify-between text-base sm:text-2xl">
               <p>Wetted area:</p>
-              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.dimension.wetted_surface_area} m²</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.wetted_surface_area} m²</p>
+            </div>
+            <div class="flex flex-row justify-between text-base sm:text-2xl">
+              <p>Displacement:</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.displacement} kg</p>
+            </div>
+            <div class="flex flex-row justify-between text-base sm:text-2xl">
+              <p>Crew Weight:</p>
+              <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_base_spec.dimension.crew_weight} kg</p>
             </div>
           {/if}
         {:else}
           <h1 class="p-2 mb-2 text-2xl sm:text-4xl font-bold text-center bg-slate-600/30 rounded-lg">Misc</h1>
-          <div class="flex flex-row justify-between text-base sm:text-2xl">
-            <p>Crew Weight:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.max_crew_weight} kg</p>
-          </div>
-          <div class="flex flex-row justify-between text-base sm:text-2xl">
-            <p>Displacement:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.sailing_displacement} kg</p>
-          </div>
-          <div class="flex flex-row justify-between text-base sm:text-2xl">
-            <p>Stability Index:</p>
-            <p class="bg-slate-600/40 px-2 py-1 rounded-lg">{mountedShip.boat_spec.misc.stability_index}</p>
-          </div>
         {/if} 
       </div>
     </section>

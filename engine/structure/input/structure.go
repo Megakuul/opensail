@@ -32,8 +32,9 @@ type TeamStructure struct {
 }
 
 type ShipStructure struct {
-	BasePath   string
-	ConfigFile string
-	InfoFile   string
-	SpecFile   string
+	BasePath      string
+	ConfigFile    string
+	InfoFile      string
+	BaseSpecFile  string
+	ExtraSpecFile string
 }

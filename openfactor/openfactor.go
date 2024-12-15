@@ -19,6 +19,8 @@
 
 package openfactor
 
+import "math"
+
 // Version returns the algorithm version.
 func Version() string {
 	return "v0.0.1"
@@ -33,6 +35,14 @@ const (
 	MODE_SEMI
 	MODE_DISPLACE
 )
+
+var MODE_FACTOR = map[MODE]float64{
+	MODE_DEFAULT:   1,
+	MODE_HYDROFOIL: 0.9,
+	MODE_PLANING:   0.7,
+	MODE_SEMI:      0.5,
+	MODE_DISPLACE:  0.3,
+}
 
 type STABILIZATION int64
 
@@ -107,10 +117,52 @@ type EvaluationInput struct {
 }
 
 type EvaluationOutput struct {
+	// Openfactor is calculated flat from 0.0 on. To create a more human friendly coefficient
+	// the resulting factors are lifted by this number. Therefore the Lifter is the difference between
+	// the reference ship factor and 1.0 (e.g. RefShipTCC = 0.83; Lifter = 0.17; results in RefShipTCC == 1.00).
+	// The Lifter is already applied to all results and is just returned for informational purposes.
+	Lifter float64
+
 	// Time correction coefficient produced by the algorithm.
 	TCC float64
+	// SpeedFactor specifies the factor the boat retrieved in category "Speed".
+	SpeedFactor float64
+	// AgilityFactor specifies the factor the boat retrieved in category "Agility".
+	AgilityFactor float64
+	// StabilizationFactor specifies the factor the boat retrieved in category "Stability".
+	StabilizationFactor float64
 }
 
 func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 	return &EvaluationOutput{TCC: 1}, nil
+}
+
+func evaluateHullFactor(displacement, crew float64, composition map[MATERIAL]float64) float64 {
+
+}
+
+func evaluateSailFactor(displacement, crew float64, composition map[MATERIAL]float64) float64 {
+
+}
+
+func evaluateWeightFactor(displacement, crew float64, composition map[MATERIAL]float64) float64 {
+
+}
+
+func evaluateDownwindSpeedFactor(displ, asym, sym float64) float64 {
+	sailArea := math.Max(sym, asym)
+	displArea := displ / 1000 // assuming water is 1000 kg / m3
+
+	// ratio between the edge length of sailArea and displArea.
+	sailDisplRatio := math.Pow(sailArea, 1/2) / math.Pow(displArea, 1/3)
+
+	return (sailArea * sailDisplRatio) / DOWNWIND_SPEED_FACTOR
+}
+
+func evaluateAgilityFactor(loa, beam, draft, wss, main, jib, asym, sym float64) float64 {
+
+}
+
+func evaluateStabilizationFactor(loa, beam, draft, wss, main, jib float64, hull HULL, stabilization STABILIZATION) float64 {
+
 }

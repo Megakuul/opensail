@@ -54,21 +54,27 @@ func generateShips(repoPath string, ships map[string]struct{}, shipStruct input.
 			return nil, fmt.Errorf("failed to generate ship info (ship '%s'): %w", ship, err)
 		}
 
-		outputShipSpec, err := generateShipSpec(shipConfig.Spec, path.Join(shipPath, shipStruct.SpecFile))
+		outputShipBaseSpec, err := generateShipBaseSpec(shipConfig.BaseSpec, path.Join(shipPath, shipStruct.BaseSpecFile))
 		if err != nil {
 			return nil, fmt.Errorf("failed to generate ship spec (ship '%s'): %w", ship, err)
 		}
 
-		outputShipRating, err := generateShipRating(outputShipSpec)
+		outputShipExtraSpec, err := generateShipExtraSpec(shipConfig.ExtraSpec, path.Join(shipPath, shipStruct.ExtraSpecFile))
+		if err != nil {
+			return nil, fmt.Errorf("failed to generate ship spec (ship '%s'): %w", ship, err)
+		}
+
+		outputShipRating, err := generateShipRating(outputShipBaseSpec, outputShipExtraSpec)
 		if err != nil {
 			return nil, fmt.Errorf("failed to generate ship rating (ship '%s'): %w", ship, err)
 		}
 
 		shipMap[ship] = output.ShipConfig{
-			Team:       shipConfig.Team,
-			ShipInfo:   *outputShipInfo,
-			ShipSpec:   *outputShipSpec,
-			ShipRating: *outputShipRating,
+			Team:          shipConfig.Team,
+			ShipInfo:      *outputShipInfo,
+			ShipBaseSpec:  *outputShipBaseSpec,
+			ShipExtraSpec: *outputShipExtraSpec,
+			ShipRating:    *outputShipRating,
 		}
 	}
 
@@ -129,40 +135,38 @@ func generateShipInfo(info input.ShipConfigInfo, infoPath string) (*output.ShipC
 	}
 }
 
-func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipConfigSpec, error) {
+func generateShipBaseSpec(spec input.ShipConfigBaseSpec, specPath string) (*output.ShipConfigBaseSpec, error) {
 	switch spec.Source {
-	case input.SHIP_SPEC_MANUAL:
+	case input.SHIP_BASE_SPEC_MANUAL:
 		shipSpecRaw, err := os.ReadFile(specPath)
 		if err != nil {
 			return nil, err
 		}
-		shipSpec := &input.ShipSpec{}
+		shipSpec := &input.ShipBaseSpec{}
 		err = toml.Unmarshal(shipSpecRaw, shipSpec)
 		if err != nil {
 			return nil, err
 		}
 
-		return &output.ShipConfigSpec{
-			Source: output.SHIP_SPEC_MANUAL,
-			Dimension: output.ShipConfigDimension{
+		return &output.ShipConfigBaseSpec{
+			Source: output.SHIP_BASE_SPEC_MANUAL,
+			Dimension: output.ShipConfigBaseSpecDimension{
 				LengthOverAll:     shipSpec.Dimension.LengthOverAll,
 				Draft:             shipSpec.Dimension.Draft,
 				Beam:              shipSpec.Dimension.Beam,
 				ForestayHeight:    shipSpec.Dimension.ForestayHeight,
 				WettedSurfaceArea: shipSpec.Dimension.WettedSurfaceArea,
+				Displacement:      shipSpec.Dimension.SailingDisplacement,
+				CrewWeight:        shipSpec.Dimension.MaxCrewWeight,
 			},
-			SailArea: output.ShipConfigSailArea{
+			SailArea: output.ShipConfigBaseSpecSailArea{
 				Main:                shipSpec.SailArea.Main,
 				Jib:                 shipSpec.SailArea.Jib,
 				AsymmetricSpinnaker: shipSpec.SailArea.AsymmetricSpinnaker,
 				SymmetricSpinnaker:  shipSpec.SailArea.SymmetricSpinnaker,
 			},
-			Misc: output.ShipConfigMisc{
-				SailingDisplacement: shipSpec.Misc.SailingDisplacement,
-				MaxCrewWeight:       shipSpec.Misc.MaxCrewWeight,
-			},
 		}, nil
-	case input.SHIP_SPEC_ORC:
+	case input.SHIP_BASE_SPEC_ORC:
 		if spec.ORCRefNo == "" {
 			return nil, fmt.Errorf("invalid ship orc RefNo. '%s'", spec.ORCRefNo)
 		}
@@ -177,47 +181,75 @@ func generateShipSpec(spec input.ShipConfigSpec, specPath string) (*output.ShipC
 		}
 		orcShip := downBoatRms.Rms[0]
 
-		return &output.ShipConfigSpec{
-			Source: output.SHIP_SPEC_ORC,
-			Dimension: output.ShipConfigDimension{
+		return &output.ShipConfigBaseSpec{
+			Source: output.SHIP_BASE_SPEC_ORC,
+			Dimension: output.ShipConfigBaseSpecDimension{
 				LengthOverAll:     orcShip.LOA,
 				Draft:             orcShip.Draft,
 				Beam:              orcShip.MB,
 				ForestayHeight:    orcShip.IMSL,
 				WettedSurfaceArea: orcShip.WSS,
+				Displacement:      orcShip.DsplSailing,
+				CrewWeight:        orcShip.CrewWT,
 			},
-			SailArea: output.ShipConfigSailArea{
+			SailArea: output.ShipConfigBaseSpecSailArea{
 				Main:                orcShip.AreaMain,
 				Jib:                 orcShip.AreaJib,
 				AsymmetricSpinnaker: orcShip.AreaAsym,
 				SymmetricSpinnaker:  orcShip.AreaSym,
 			},
-			Misc: output.ShipConfigMisc{
-				StabilityIndex:       orcShip.StabilityIndex,
-				MeasuredDisplacement: orcShip.DsplMeasurement,
-				SailingDisplacement:  orcShip.DsplSailing,
-				MaxCrewWeight:        orcShip.CrewWT,
-			},
 		}, nil
 	default:
-		return nil, fmt.Errorf("invalid ship spec source '%s'", spec.Source)
+		return nil, fmt.Errorf("invalid ship base spec source '%s'", spec.Source)
 	}
 }
 
-func generateShipRating(spec *output.ShipConfigSpec) (*output.ShipConfigRating, error) {
+func generateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) (*output.ShipConfigExtraSpec, error) {
+	switch spec.Source {
+	case input.SHIP_EXTRA_SPEC_MANUAL:
+		shipSpecRaw, err := os.ReadFile(specPath)
+		if err != nil {
+			return nil, err
+		}
+		shipSpec := &input.ShipExtraSpec{}
+		err = toml.Unmarshal(shipSpecRaw, shipSpec)
+		if err != nil {
+			return nil, err
+		}
+
+		return &output.ShipConfigExtraSpec{
+			Source: output.SHIP_EXTRA_SPEC_MANUAL,
+			Design: output.ShipConfigExtraSpecDesign{
+				Mode:          output.SHIP_EXTRA_SPEC_DESIGN_MODE(shipSpec.Design.Mode),
+				Stabilization: output.SHIP_EXTRA_SPEC_DESIGN_STABILIZATION(shipSpec.Design.Stabilization),
+				Hull:          output.SHIP_EXTRA_SPEC_DESIGN_HULL(shipSpec.Design.Hull),
+			},
+			Composition: output.ShipConfigExtraSpecComposition{
+				KeelPercentage: shipSpec.Composition.KeelPercentage,
+				CfkPercentage:  shipSpec.Composition.CfkPercentage,
+				AluPercentage:  shipSpec.Composition.AluPercentage,
+				GfkPercentage:  shipSpec.Composition.GfkPercentage,
+				WoodPercentage: shipSpec.Composition.WoodPercentage,
+			},
+		}, nil
+	default:
+		return nil, fmt.Errorf("invalid ship extra spec source '%s'", spec.Source)
+	}
+}
+
+func generateShipRating(baseSpec *output.ShipConfigBaseSpec, extraSpec *output.ShipConfigExtraSpec) (*output.ShipConfigRating, error) {
 	factorOutput, err := openfactor.EvaluateFactor(&openfactor.EvaluationInput{
-		LOA:                     spec.Dimension.LengthOverAll,
-		MaxDraft:                spec.Dimension.Draft,
-		MaxBeam:                 spec.Dimension.Beam,
-		IMSL:                    spec.Dimension.ForestayHeight,
-		WSS:                     spec.Dimension.WettedSurfaceArea,
-		MainSailArea:            spec.SailArea.Main,
-		JibSailArea:             spec.SailArea.Jib,
-		AsymmetricSpinnakerArea: spec.SailArea.AsymmetricSpinnaker,
-		SymmetricSpinnakerArea:  spec.SailArea.SymmetricSpinnaker,
-		StabilityIndex:          spec.Misc.StabilityIndex,
-		Displacement:            spec.Misc.SailingDisplacement,
-		CrewWeight:              spec.Misc.MaxCrewWeight,
+		LOA:                     baseSpec.Dimension.LengthOverAll,
+		MaxDraft:                baseSpec.Dimension.Draft,
+		MaxBeam:                 baseSpec.Dimension.Beam,
+		IMSL:                    baseSpec.Dimension.ForestayHeight,
+		WSS:                     baseSpec.Dimension.WettedSurfaceArea,
+		MainSailArea:            baseSpec.SailArea.Main,
+		JibSailArea:             baseSpec.SailArea.Jib,
+		AsymmetricSpinnakerArea: baseSpec.SailArea.AsymmetricSpinnaker,
+		SymmetricSpinnakerArea:  baseSpec.SailArea.SymmetricSpinnaker,
+		Displacement:            baseSpec.Dimension.Displacement,
+		CrewWeight:              baseSpec.Dimension.CrewWeight,
 	})
 	if err != nil {
 		return nil, err

@@ -72,7 +72,7 @@ func validateShips(repoPath string, ships map[string]struct{}, shipStruct input.
 			return err
 		}
 
-		err = validateShipSpec(shipConfig.Spec, path.Join(shipPath, shipStruct.SpecFile))
+		err = validateShipBaseSpec(shipConfig.BaseSpec, path.Join(shipPath, shipStruct.BaseSpecFile))
 		if err != nil {
 			return err
 		}
@@ -117,16 +117,16 @@ func validateShipInfo(info input.ShipConfigInfo, infoPath string) error {
 	return nil
 }
 
-func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
+func validateShipBaseSpec(spec input.ShipConfigBaseSpec, specPath string) error {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
 	switch spec.Source {
-	case input.SHIP_SPEC_MANUAL:
+	case input.SHIP_BASE_SPEC_MANUAL:
 		shipSpecRaw, err := os.ReadFile(specPath)
 		if err != nil {
 			return err
 		}
-		shipSpec := &input.ShipSpec{}
+		shipSpec := &input.ShipBaseSpec{}
 		err = toml.Unmarshal(shipSpecRaw, shipSpec)
 		if err != nil {
 			return err
@@ -135,7 +135,7 @@ func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
 		if err != nil {
 			return err
 		}
-	case input.SHIP_SPEC_ORC:
+	case input.SHIP_BASE_SPEC_ORC:
 		if spec.ORCRefNo == "" {
 			return fmt.Errorf("invalid ship orc RefNo. '%s'", spec.ORCRefNo)
 		}
@@ -148,7 +148,59 @@ func validateShipSpec(spec input.ShipConfigSpec, specPath string) error {
 			return fmt.Errorf("ship with RefNo. '%s' was not found on orc database", spec.ORCRefNo)
 		}
 	default:
-		return fmt.Errorf("invalid ship spec source '%s'", spec.Source)
+		return fmt.Errorf("invalid ship base spec source '%s'", spec.Source)
+	}
+	return nil
+}
+
+func validateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) error {
+	validate := validator.New(validator.WithRequiredStructEnabled())
+
+	switch spec.Source {
+	case input.SHIP_EXTRA_SPEC_MANUAL:
+		shipSpecRaw, err := os.ReadFile(specPath)
+		if err != nil {
+			return err
+		}
+		shipSpec := &input.ShipExtraSpec{}
+		err = toml.Unmarshal(shipSpecRaw, shipSpec)
+		if err != nil {
+			return err
+		}
+		err = validate.Struct(shipSpec)
+		if err != nil {
+			return err
+		}
+
+		switch shipSpec.Design.Mode {
+		case input.SHIP_EXTRA_SPEC_DESIGN_DISPLACE:
+		case input.SHIP_EXTRA_SPEC_DESIGN_SEMI:
+		case input.SHIP_EXTRA_SPEC_DESIGN_PLANING:
+		case input.SHIP_EXTRA_SPEC_DESIGN_HYDROFOIL:
+			break
+		default:
+			return fmt.Errorf("invalid ship extra spec mode '%s'", shipSpec.Design.Mode)
+		}
+
+		switch shipSpec.Design.Stabilization {
+		case input.SHIP_EXTRA_SPEC_DESIGN_FOILS:
+		case input.SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD:
+		case input.SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD:
+		case input.SHIP_EXTRA_SPEC_DESIGN_KEEL:
+			break
+		default:
+			return fmt.Errorf("invalid ship extra spec stabilization '%s'", shipSpec.Design.Stabilization)
+		}
+
+		switch shipSpec.Design.Hull {
+		case input.SHIP_EXTRA_SPEC_DESIGN_MONO:
+		case input.SHIP_EXTRA_SPEC_DESIGN_MULTI:
+			break
+		default:
+			return fmt.Errorf("invalid ship extra spec hull '%s'", shipSpec.Design.Hull)
+		}
+	default:
+		return fmt.Errorf("invalid ship extra spec source '%s'", spec.Source)
 	}
 	return nil
 }
