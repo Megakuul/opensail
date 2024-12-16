@@ -99,10 +99,12 @@ const (
 type SHIP_EXTRA_SPEC_DESIGN_STABILIZATION string
 
 const (
-	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_HULL = "foils"
-	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "daggerboard"
-	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_HULL = "centreboard"
-	SHIP_EXTRA_SPEC_DESIGN_KEEL        SHIP_EXTRA_SPEC_DESIGN_HULL = "keel"
+	SHIP_EXTRA_SPEC_DESIGN_FULLKEEL    SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "fullkeel"
+	SHIP_EXTRA_SPEC_DESIGN_BULBKEEL    SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "bulbkeel"
+	SHIP_EXTRA_SPEC_DESIGN_FINKEEL     SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "finkeel"
+	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "daggerboard"
+	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "centreboard"
+	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "foils"
 )
 
 type SHIP_EXTRA_SPEC_DESIGN_HULL string
@@ -129,10 +131,20 @@ type ShipConfigExtraSpecComposition struct {
 }
 
 type ShipConfigRating struct {
-	Version             string  `json:"version"`
-	Lifter              float64 `json:"lifter"`
-	TCC                 float64 `json:"tcc"`
+	Version string  `json:"version"`
+	TCC     float64 `json:"tcc"`
+
 	SpeedFactor         float64 `json:"speed_factor"`
-	AgilityFactor       float64 `json:"agility_factor"`
-	StabilizationFactor float64 `json:"stabilization_factor"`
+	SpeedInfluence      float64 `json:"speed_influence"`
+	SpeedDragPoints     float64 `json:"speed_drag_points"`
+	SpeedUpwindPoints   float64 `json:"speed_upwind_points"`
+	SpeedDownwindPoints float64 `json:"speed_downwind_points"`
+
+	StabilizationFactor    float64 `json:"stabilization_factor"`
+	StabilizationInfluence float64 `json:"stabilization_influence"`
+	StabilizationPoints    float64 `json:"stabilization_points"`
+
+	AgilityFactor    float64 `json:"agility_factor"`
+	AgilityInfluence float64 `json:"agility_influence"`
+	AgilityPoints    float64 `json:"agility_points"`
 }

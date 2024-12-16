@@ -37,20 +37,21 @@ const (
 	DRAG_SPEED_POINT_PATCHER     = 0.6 // empirical value to patch the drag speed points
 	UPWIND_SPEED_POINT_PATCHER   = 0.8 // empirical value to patch the upwind speed points
 	DOWNWIND_SPEED_POINT_PATCHER = 0.5 // empirical value to patch the downwind speed points
-
+	STABILIZATION_POINT_PATCHER  = 0.5 // empirical value to patch the stabilization points
+	AGILITY_POINT_PATCHER        = 0.7 // empirical value to patch the agility points
 )
 
 type MODE int64
 
 const (
-	MODE_DEFAULT MODE = iota // default==unspecified provides 0 extra rating
+	MODE_DEFAULT MODE = iota
 	MODE_HYDROFOIL
 	MODE_PLANING
 	MODE_SEMI
 	MODE_DISPLACE
 )
 
-var MODE_FACTOR = map[MODE]float64{
+var MODE_DRAG_FACTOR = map[MODE]float64{
 	MODE_DEFAULT:   0,    // default mode is considered 0 drag - boat does not touch the water.
 	MODE_HYDROFOIL: 0.05, // hydrofoil mode provides optimal drag (nearly 0).
 	MODE_PLANING:   0.5,  // assuming the boats has 50% wsa while planing
@@ -62,11 +63,34 @@ type STABILIZATION int64
 
 const (
 	STABILIZATION_DEFAULT STABILIZATION = iota
-	STABILIZATION_KEEL
+	STABILIZATION_BULBKEEL
+	STABILIZATION_FINKEEL
+	STABILIZATION_FULLKEEL
 	STABILIZATION_CENTREBOARD
 	STABILIZATION_DAGGERBOARD
 	STABILIZATION_FOILS
 )
+
+// sorry for this retarded variable name but it fits into scheme...
+var STABILIZATION_STABILIZATION_FACTOR = map[STABILIZATION]float64{
+	STABILIZATION_DEFAULT:     1,   // default has perfect stabilization
+	STABILIZATION_FULLKEEL:    0.9, // fullkeel provides the best stability due to ballast + righting force
+	STABILIZATION_BULBKEEL:    0.8, // bulbkeel provides decent stability mainly due to well distributed ballast
+	STABILIZATION_FINKEEL:     0.7, // finkeel provides decent stability with decent distributed ballast
+	STABILIZATION_CENTREBOARD: 0.2, // centreboard provides some righting force but no distributed ballast
+	STABILIZATION_DAGGERBOARD: 0.2, // daggerboard provides some righting force but no distributed ballast
+	STABILIZATION_FOILS:       0.1, // foils provide decent righting force but are generally harder to operate
+}
+
+var STABILIZATION_AGILITY_FACTOR = map[STABILIZATION]float64{
+	STABILIZATION_DEFAULT:     1,   // default has perfect stabilization
+	STABILIZATION_BULBKEEL:    0.9, // bulbkeel provides well agility and enables more risky maneuvers due to distributed ballast
+	STABILIZATION_FINKEEL:     0.8, // finkeel provides well agility and enables more risky maneuvers due to distributed the ballast
+	STABILIZATION_CENTREBOARD: 0.7, // centreboard provides decent agility due to the lack of stabilization
+	STABILIZATION_DAGGERBOARD: 0.7, // daggerboard provides decent agility due to the lack of stabilization
+	STABILIZATION_FULLKEEL:    0.4, // fullkeel provides rather limited agility due to the strong straight righting force
+	STABILIZATION_FOILS:       0.2, // foils provide rather bad agility and are generally harder to operate
+}
 
 type HULL int64
 
@@ -75,6 +99,18 @@ const (
 	HULL_MULTI
 	HULL_MONO
 )
+
+var HULL_STABILIZATION_FACTOR = map[HULL]float64{
+	HULL_DEFAULT: 1,   // default has perfect stabilization
+	HULL_MULTI:   0.9, // multi hull provides almost optimal stabilization
+	HULL_MONO:    0.7, // mono hull provides decent stabilization
+}
+
+var HULL_AGILITY_FACTOR = map[HULL]float64{
+	HULL_DEFAULT: 1,   // default has perfect agility
+	HULL_MONO:    0.9, // mono hull has nearly perfect agility
+	HULL_MULTI:   0.3, // multi hull has limited agility
+}
 
 type MATERIAL int64
 
@@ -88,17 +124,6 @@ const (
 	MATERIAL_ENGINE
 	MATERIAL_AMENITY
 )
-
-var MATERIAL_FACTOR = map[MATERIAL]float64{
-	MATERIAL_DEFAULT: 1,    // default material is considered perfect for its function
-	MATERIAL_BALLAST: 1,    // no matter what, ballast is always 100% perfect in its function
-	MATERIAL_CFK:     0.9,  // cfk is nearly perfect in its function
-	MATERIAL_ALU:     0.5,  // assuming it takes ~1.8 times more alu then cfk to get the same structural strength
-	MATERIAL_GFK:     0.4,  // assuming it takes ~2.2 times more gfk then cfk to get the same structural strength
-	MATERIAL_WOOD:    0.23, // assuming it takes ~4 times more wood then cfk to get the same structural strength
-	MATERIAL_ENGINE:  0,    // the engine has no function for the sailor and is therefore ignored
-	MATERIAL_AMENITY: 0,    // the amenities have no function for the sailor and are therefore ignored
-}
 
 // EvaluationInput specifies data that is used to derive the rating.
 type EvaluationInput struct {
@@ -156,10 +181,12 @@ type EvaluationOutput struct {
 
 	// StabilizationFactor specifies the factor the boat retrieved in category "Stability".
 	StabilizationFactor    float64
+	StabilizationPoints    float64
 	StabilizationInfluence float64
 
 	// AgilityFactor specifies the factor the boat retrieved in category "Agility".
 	AgilityFactor    float64
+	AgilityPoints    float64
 	AgilityInfluence float64
 }
 
@@ -180,11 +207,30 @@ func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 		input.AsymmetricSpinnakerArea,
 		input.SymmetricSpinnakerArea,
 	)
-	speedPoints := speedDragPoints + speedUpwindPoints + speedDownwindPoints
+	speedPoints := (speedDragPoints + speedUpwindPoints + speedDownwindPoints) / 3
 	speedFactor := POINT_ANCHOR - (speedPoints / POINT_DIVIDOR)
 
+	stabilizationPoints := evaluateStabilizationPoints(
+		input.WSA,
+		input.MaxDraft,
+		input.MaxBeam,
+		input.LOA,
+		input.Displacement,
+		input.MainSailArea,
+		input.Composition,
+		input.Stabilization,
+		input.Hull,
+	)
 	stabilizationFactor := POINT_ANCHOR - (stabilizationPoints / POINT_DIVIDOR)
 
+	agilityPoints := evaluateAgilityPoints(
+		input.MaxBeam,
+		input.LOA,
+		input.CrewWeight,
+		input.Displacement,
+		input.Stabilization,
+		input.Hull,
+	)
 	agilityFactor := POINT_ANCHOR - (agilityPoints / POINT_DIVIDOR)
 
 	tcc := ((speedFactor * SPEED_FACTOR_INFLUENCE) +
@@ -200,52 +246,92 @@ func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 		SpeedDownwindPoints: speedDownwindPoints,
 
 		StabilizationFactor:    stabilizationFactor,
+		StabilizationPoints:    stabilizationPoints,
 		StabilizationInfluence: STABILIZATION_FACTOR_INFLUENCE,
 
 		AgilityFactor:    agilityFactor,
+		AgilityPoints:    agilityPoints,
 		AgilityInfluence: AGILITY_FACTOR_INFLUENCE,
 	}, nil
 }
 
+// evaluateDragSpeedPoints calcs the drag speed. more points == fewer drag == good
 func evaluateDragSpeedPoints(mode MODE, displ, wsa float64) float64 {
-	displArea := displ / 1000 // assuming water is 1000 kg / m3
+	displVol := displ / 1000 // assuming water is 1000 kg / m3
 	// ratio between the edge length of wsa and displArea.
-	wsaDisplRatio := math.Pow(math.Pow(wsa, 1/2)/math.Pow(displArea, 1/3), 2)
+	wsaDisplRatio := math.Pow(math.Pow(wsa, 1/2)/math.Pow(displVol, 1/3), 2)
 	// multiply wsa by the mode factor to adjust its influence based on the mode.
 	// this means: low factors (foils) reduces wsa impact, while high factors (displacement) increase the wsa impact.
 	// the reference value 100 inverts the scale, so higher wsa means higher drag and lower points.
-	return (500 - (wsa * wsaDisplRatio * MODE_FACTOR[mode])) * DRAG_SPEED_POINT_PATCHER
+	return (500 - (wsa * wsaDisplRatio * MODE_DRAG_FACTOR[mode])) * DRAG_SPEED_POINT_PATCHER
 }
 
+// evaluateDownwindSpeedPoints calcs the downwind speed. more points == faster == good
 func evaluateDownwindSpeedPoints(displ, asym, sym float64) float64 {
 	// asymmetric and symmetric downwindsails are not differentiated, as its considered a "strategic decision".
 	// the largest sail is counted, other smaller sails may be used in the race.
 	sailArea := math.Max(sym, asym)
-	displArea := displ / 1000 // assuming water is 1000 kg / m3
+	displVol := displ / 1000 // assuming water is 1000 kg / m3
 
-	// ratio between the edge length of sailArea and displArea.
-	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displArea, 1/3), 2)
+	// ratio between the edge length of sailArea and displVol.
+	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
 	return (sailArea * sailDisplRatio) * DOWNWIND_SPEED_POINT_PATCHER
 }
 
+// evaluateUpwindSpeedPoints calcs the upwind speed. more points == faster == good
 func evaluateUpwindSpeedPoints(displ, main, jib, forestay float64) float64 {
 	// higher forestay means the sails can be trimmed to use higher winds which are generally faster due to surface friction.
 	// this is not very influential, so only a small fraction of the jib is added.
 	forestayFactor := forestay / 100
 	sailArea := main + jib + (math.Pow(math.Pow(jib, 1/2)*forestayFactor, 2))
-	displArea := displ / 1000 // assuming water is 1000 kg / m3
+	displVol := displ / 1000 // assuming water is 1000 kg / m3
 
-	// ratio between the edge length of sailArea and displArea.
-	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displArea, 1/3), 2)
+	// ratio between the edge length of sailArea and displVol.
+	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
 	return (sailArea * sailDisplRatio) * UPWIND_SPEED_POINT_PATCHER
 }
 
-func evaluateAgilityFactor(loa, beam, draft, wsa, main, jib, asym, sym float64) float64 {
+// evaluateStabilizationPoints calcs the boat stabilization. more points == better stabilization == good
+func evaluateStabilizationPoints(wsa, draft, beam, loa, displ, main float64, material map[MATERIAL]float64, stabilization STABILIZATION, hull HULL) float64 {
+	displVol := displ / 1000 // assuming water is 1000 kg / m3
+	// sailDisplRatio is added to take strong heeling forces into account.
+	// spinnaker and jib sails are generally a more controllable and minor heeling forces and therefore ignored.
+	sailDisplRatio := math.Pow(main, 1/2) / math.Pow(displVol, 1/3)
+	// wsaDisplRatio is added to take into account how much relative wsa the boat has.
+	// A huge wsa is required for heavier boats, but for light boats this enhances formstability.
+	wsaDisplRatio := math.Pow(wsa, 1/2) / math.Pow(displVol, 1/3)
+	// beamLoaRatio is added to take into account the beam relative to loa.
+	// A wide beam (relative to loa) also provides more formstability to the boat.
+	beamLoaRatio := beam / loa
 
+	// draft is taken into account because generally more draft == more ship in water == more stability
+	basicStabilizationPoints := wsaDisplRatio * sailDisplRatio * beamLoaRatio * draft
+
+	// ballastFactor is calculated by the amount of special ballast on board
+	// it is multiplied by the stabilization factor, this makes ballast in combination with
+	// keels weight stronger then ballast in combination with daggerboards.
+	ballastPercentage := material[MATERIAL_BALLAST]
+	if ballastPercentage <= 0 {
+		ballastPercentage = 100 // by default the ballast is 100% of the displacement
+	}
+	ballastFactor := (ballastPercentage * STABILIZATION_STABILIZATION_FACTOR[stabilization]) / 100
+
+	return basicStabilizationPoints * HULL_STABILIZATION_FACTOR[hull] * ballastFactor * STABILIZATION_POINT_PATCHER
 }
 
-func evaluateStabilizationFactor(loa, beam, draft, wsa, main, jib float64, hull HULL, stabilization STABILIZATION) float64 {
+// evaluateAgilityPoints calcs the boat agility. more points == better agility == good
+func evaluateAgilityPoints(beam, loa, crew, displ float64, stabilization STABILIZATION, hull HULL) float64 {
+	// beamLoaDiff is added to take into account the difference between loa and beam.
+	// large difference means the ship is compact (and agile), small difference means it's long and thin which makes it less agile.
+	beamLoaDiff := math.Max(loa, beam) / (math.Abs(loa-beam) + 0.0000001)
+	// crewDisplRatio is added to take into account that more crew weight == more agility.
+	// with more crew you can more effective rebalance the weight of the ship and therefore operate more agile.
+	crewDisplRatio := crew / displ
 
+	basicAgility := beamLoaDiff * crewDisplRatio
+
+	// loa is mixed in here because in general longer ships have
+	return basicAgility * HULL_AGILITY_FACTOR[hull] * STABILIZATION_AGILITY_FACTOR[stabilization] * AGILITY_POINT_PATCHER
 }

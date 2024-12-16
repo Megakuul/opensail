@@ -65,21 +65,30 @@ import { AdapterError } from "$lib/adapter/error";
 
 /**
  * @typedef {Object} ShipConfigExtraSpecComposition
- * @property {number} keel_percentage
+ * @property {number} ballast_percentage
  * @property {number} cfk_percentage
  * @property {number} alu_percentage
  * @property {number} gfk_percentage
  * @property {number} wood_percentage
+ * @property {number} engine_percentage
+ * @property {number} amenity_percentage
  */
 
 /**
  * @typedef {Object} ShipConfigRating
  * @property {string} version
- * @property {number} lifter
  * @property {number} tcc
  * @property {number} speed_factor
- * @property {number} agility_factor
+ * @property {number} speed_influence
+ * @property {number} speed_drag_points
+ * @property {number} speed_upwind_points
+ * @property {number} speed_downwind_points
  * @property {number} stabilization_factor
+ * @property {number} stabilization_influence
+ * @property {number} stabilization_points
+ * @property {number} agility_factor
+ * @property {number} agility_influence
+ * @property {number} agility_points
  */
 
 /**

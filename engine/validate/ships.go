@@ -183,10 +183,12 @@ func validateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) erro
 		}
 
 		switch shipSpec.Design.Stabilization {
-		case input.SHIP_EXTRA_SPEC_DESIGN_FOILS:
+		case input.SHIP_EXTRA_SPEC_DESIGN_FULLKEEL:
+		case input.SHIP_EXTRA_SPEC_DESIGN_BULBKEEL:
+		case input.SHIP_EXTRA_SPEC_DESIGN_FINKEEL:
 		case input.SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD:
 		case input.SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD:
-		case input.SHIP_EXTRA_SPEC_DESIGN_KEEL:
+		case input.SHIP_EXTRA_SPEC_DESIGN_FOILS:
 			break
 		default:
 			return fmt.Errorf("invalid ship extra spec stabilization '%s'", shipSpec.Design.Stabilization)
@@ -198,6 +200,18 @@ func validateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) erro
 			break
 		default:
 			return fmt.Errorf("invalid ship extra spec hull '%s'", shipSpec.Design.Hull)
+		}
+
+		var defaultComposition float64 = 100.0
+		defaultComposition -= shipSpec.Composition.BallastPercentage
+		defaultComposition -= shipSpec.Composition.CfkPercentage
+		defaultComposition -= shipSpec.Composition.AluPercentage
+		defaultComposition -= shipSpec.Composition.GfkPercentage
+		defaultComposition -= shipSpec.Composition.WoodPercentage
+		defaultComposition -= shipSpec.Composition.EnginePercentage
+		defaultComposition -= shipSpec.Composition.AmenityPercentage
+		if defaultComposition < 0 {
+			return fmt.Errorf("invalid ship composition; exceeded 100%%")
 		}
 	default:
 		return fmt.Errorf("invalid ship extra spec source '%s'", spec.Source)

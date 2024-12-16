@@ -140,16 +140,18 @@ const (
 type SHIP_EXTRA_SPEC_DESIGN_STABILIZATION string
 
 const (
-	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "foils"
+	SHIP_EXTRA_SPEC_DESIGN_FULLKEEL    SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "fullkeel"
+	SHIP_EXTRA_SPEC_DESIGN_BULBKEEL    SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "bulbkeel"
+	SHIP_EXTRA_SPEC_DESIGN_FINKEEL     SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "finkeel"
 	SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "daggerboard"
 	SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "centreboard"
-	SHIP_EXTRA_SPEC_DESIGN_KEEL        SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "keel"
+	SHIP_EXTRA_SPEC_DESIGN_FOILS       SHIP_EXTRA_SPEC_DESIGN_STABILIZATION = "foils"
 )
 
 type SHIP_EXTRA_SPEC_DESIGN_HULL string
 
 const (
-	SHIP_EXTRA_SPEC_DESIGN_MONO  SHIP_EXTRA_SPEC_DESIGN_HULL = "manual"
+	SHIP_EXTRA_SPEC_DESIGN_MONO  SHIP_EXTRA_SPEC_DESIGN_HULL = "mono"
 	SHIP_EXTRA_SPEC_DESIGN_MULTI SHIP_EXTRA_SPEC_DESIGN_HULL = "multi"
 )
 
@@ -164,7 +166,7 @@ type ShipExtraSpecDesign struct {
 
 type ShipExtraSpecComposition struct {
 	// BallastPercentage specifies how much weight of the ship is pure ballast (usually lead)
-	BallastPercentage float64 `toml:"keel_percentage"`
+	BallastPercentage float64 `toml:"ballast_percentage"`
 	// CfkPercentage specifies how much weight of the ship is cfk
 	CfkPercentage float64 `toml:"cfk_percentage"`
 	// AluPercentage specifies how much weight of the ship is aluminium

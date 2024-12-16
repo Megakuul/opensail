@@ -240,18 +240,79 @@ func generateShipExtraSpec(spec input.ShipConfigExtraSpec, specPath string) (*ou
 }
 
 func generateShipRating(baseSpec *output.ShipConfigBaseSpec, extraSpec *output.ShipConfigExtraSpec) (*output.ShipConfigRating, error) {
+	mode := openfactor.MODE_DEFAULT
+	switch extraSpec.Design.Mode {
+	case output.SHIP_EXTRA_SPEC_DESIGN_HYDROFOIL:
+		mode = openfactor.MODE_HYDROFOIL
+	case output.SHIP_EXTRA_SPEC_DESIGN_PLANING:
+		mode = openfactor.MODE_PLANING
+	case output.SHIP_EXTRA_SPEC_DESIGN_SEMI:
+		mode = openfactor.MODE_SEMI
+	case output.SHIP_EXTRA_SPEC_DESIGN_DISPLACE:
+		mode = openfactor.MODE_DISPLACE
+	}
+
+	stabilization := openfactor.STABILIZATION_DEFAULT
+	switch extraSpec.Design.Stabilization {
+	case output.SHIP_EXTRA_SPEC_DESIGN_FULLKEEL:
+		stabilization = openfactor.STABILIZATION_FULLKEEL
+	case output.SHIP_EXTRA_SPEC_DESIGN_BULBKEEL:
+		stabilization = openfactor.STABILIZATION_BULBKEEL
+	case output.SHIP_EXTRA_SPEC_DESIGN_FINKEEL:
+		stabilization = openfactor.STABILIZATION_FINKEEL
+	case output.SHIP_EXTRA_SPEC_DESIGN_CENTREBOARD:
+		stabilization = openfactor.STABILIZATION_CENTREBOARD
+	case output.SHIP_EXTRA_SPEC_DESIGN_DAGGERBOARD:
+		stabilization = openfactor.STABILIZATION_DAGGERBOARD
+	case output.SHIP_EXTRA_SPEC_DESIGN_FOILS:
+		stabilization = openfactor.STABILIZATION_FOILS
+	}
+
+	hull := openfactor.HULL_DEFAULT
+	switch extraSpec.Design.Hull {
+	case output.SHIP_EXTRA_SPEC_DESIGN_MONO:
+		hull = openfactor.HULL_MONO
+	case output.SHIP_EXTRA_SPEC_DESIGN_MULTI:
+		hull = openfactor.HULL_MULTI
+	}
+
+	var defaultComposition float64 = 100.0
+	defaultComposition -= extraSpec.Composition.BallastPercentage
+	defaultComposition -= extraSpec.Composition.CfkPercentage
+	defaultComposition -= extraSpec.Composition.AluPercentage
+	defaultComposition -= extraSpec.Composition.GfkPercentage
+	defaultComposition -= extraSpec.Composition.WoodPercentage
+	defaultComposition -= extraSpec.Composition.EnginePercentage
+	defaultComposition -= extraSpec.Composition.AmenityPercentage
+	if defaultComposition < 0 {
+		return nil, fmt.Errorf("invalid ship composition; exceeded 100%%")
+	}
+
 	factorOutput, err := openfactor.EvaluateFactor(&openfactor.EvaluationInput{
 		LOA:                     baseSpec.Dimension.LengthOverAll,
 		MaxDraft:                baseSpec.Dimension.Draft,
 		MaxBeam:                 baseSpec.Dimension.Beam,
 		IMSL:                    baseSpec.Dimension.ForestayHeight,
-		WSS:                     baseSpec.Dimension.WettedSurfaceArea,
+		WSA:                     baseSpec.Dimension.WettedSurfaceArea,
 		MainSailArea:            baseSpec.SailArea.Main,
 		JibSailArea:             baseSpec.SailArea.Jib,
 		AsymmetricSpinnakerArea: baseSpec.SailArea.AsymmetricSpinnaker,
 		SymmetricSpinnakerArea:  baseSpec.SailArea.SymmetricSpinnaker,
 		Displacement:            baseSpec.Dimension.Displacement,
 		CrewWeight:              baseSpec.Dimension.CrewWeight,
+		Mode:                    mode,
+		Stabilization:           stabilization,
+		Hull:                    hull,
+		Composition: map[openfactor.MATERIAL]float64{
+			openfactor.MATERIAL_DEFAULT: defaultComposition,
+			openfactor.MATERIAL_BALLAST: extraSpec.Composition.BallastPercentage,
+			openfactor.MATERIAL_CFK:     extraSpec.Composition.CfkPercentage,
+			openfactor.MATERIAL_ALU:     extraSpec.Composition.AluPercentage,
+			openfactor.MATERIAL_GFK:     extraSpec.Composition.GfkPercentage,
+			openfactor.MATERIAL_WOOD:    extraSpec.Composition.WoodPercentage,
+			openfactor.MATERIAL_ENGINE:  extraSpec.Composition.EnginePercentage,
+			openfactor.MATERIAL_AMENITY: extraSpec.Composition.AmenityPercentage,
+		},
 	})
 	if err != nil {
 		return nil, err
