@@ -115,19 +115,19 @@ const (
 )
 
 type ShipConfigExtraSpecDesign struct {
-	Mode          SHIP_EXTRA_SPEC_DESIGN_MODE          `toml:"mode"`
-	Stabilization SHIP_EXTRA_SPEC_DESIGN_STABILIZATION `toml:"stabilization"`
-	Hull          SHIP_EXTRA_SPEC_DESIGN_HULL          `toml:"hull"`
+	Mode          SHIP_EXTRA_SPEC_DESIGN_MODE          `json:"mode"`
+	Stabilization SHIP_EXTRA_SPEC_DESIGN_STABILIZATION `json:"stabilization"`
+	Hull          SHIP_EXTRA_SPEC_DESIGN_HULL          `json:"hull"`
 }
 
 type ShipConfigExtraSpecComposition struct {
-	BallastPercentage float64 `toml:"ballast_percentage"`
-	CfkPercentage     float64 `toml:"cfk_percentage"`
-	AluPercentage     float64 `toml:"alu_percentage"`
-	GfkPercentage     float64 `toml:"gfk_percentage"`
-	WoodPercentage    float64 `toml:"wood_percentage"`
-	EnginePercentage  float64 `toml:"engine_percentage"`
-	AmenityPercentage float64 `toml:"amenity_percentage"`
+	BallastPercentage float64 `json:"ballast_percentage"`
+	CfkPercentage     float64 `json:"cfk_percentage"`
+	AluPercentage     float64 `json:"alu_percentage"`
+	GfkPercentage     float64 `json:"gfk_percentage"`
+	WoodPercentage    float64 `json:"wood_percentage"`
+	EnginePercentage  float64 `json:"engine_percentage"`
+	AmenityPercentage float64 `json:"amenity_percentage"`
 }
 
 type ShipConfigRating struct {

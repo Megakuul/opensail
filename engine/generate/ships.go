@@ -319,7 +319,20 @@ func generateShipRating(baseSpec *output.ShipConfigBaseSpec, extraSpec *output.S
 	}
 
 	return &output.ShipConfigRating{
-		Version: openfactor.Version(),
-		TCC:     factorOutput.TCC,
+		Version:             openfactor.Version(),
+		TCC:                 factorOutput.TCC,
+		SpeedFactor:         factorOutput.SpeedFactor,
+		SpeedInfluence:      factorOutput.SpeedInfluence,
+		SpeedDragPoints:     factorOutput.SpeedDragPoints,
+		SpeedUpwindPoints:   factorOutput.SpeedUpwindPoints,
+		SpeedDownwindPoints: factorOutput.SpeedDownwindPoints,
+
+		StabilizationFactor:    factorOutput.StabilizationFactor,
+		StabilizationInfluence: factorOutput.StabilizationInfluence,
+		StabilizationPoints:    factorOutput.StabilizationPoints,
+
+		AgilityFactor:    factorOutput.AgilityFactor,
+		AgilityInfluence: factorOutput.AgilityInfluence,
+		AgilityPoints:    factorOutput.AgilityPoints,
 	}, nil
 }
