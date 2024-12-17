@@ -19,7 +19,9 @@
 
 package openfactor
 
-import "math"
+import (
+	"math"
+)
 
 // Version returns the algorithm version.
 func Version() string {
@@ -34,9 +36,9 @@ const (
 	STABILIZATION_FACTOR_INFLUENCE = 0.75 // empirical value specifying how much TCC influence the stabilization has
 	AGILITY_FACTOR_INFLUENCE       = 0.75 // empirical value specifying how much TCC influence the agility has
 
-	DRAG_SPEED_POINT_PATCHER     = 0.6 // empirical value to patch the drag speed points
-	UPWIND_SPEED_POINT_PATCHER   = 0.8 // empirical value to patch the upwind speed points
-	DOWNWIND_SPEED_POINT_PATCHER = 0.5 // empirical value to patch the downwind speed points
+	DRAG_SPEED_POINT_PATCHER     = 60  // empirical value to patch the drag speed points
+	UPWIND_SPEED_POINT_PATCHER   = 60  // empirical value to patch the upwind speed points
+	DOWNWIND_SPEED_POINT_PATCHER = 60  // empirical value to patch the downwind speed points
 	STABILIZATION_POINT_PATCHER  = 0.5 // empirical value to patch the stabilization points
 	AGILITY_POINT_PATCHER        = 0.7 // empirical value to patch the agility points
 )
@@ -191,26 +193,26 @@ type EvaluationOutput struct {
 }
 
 func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
-	speedDragPoints := evaluateDragSpeedPoints(
+	speedDragPoints := math.Round(evaluateDragSpeedPoints(
 		input.Mode,
 		input.Displacement,
 		input.WSA,
-	)
-	speedUpwindPoints := evaluateUpwindSpeedPoints(
+	))
+	speedUpwindPoints := math.Round(evaluateUpwindSpeedPoints(
 		input.Displacement,
 		input.MainSailArea,
 		input.AsymmetricSpinnakerArea,
 		input.IMSL,
-	)
-	speedDownwindPoints := evaluateDownwindSpeedPoints(
+	))
+	speedDownwindPoints := math.Round(evaluateDownwindSpeedPoints(
 		input.Displacement,
 		input.AsymmetricSpinnakerArea,
 		input.SymmetricSpinnakerArea,
-	)
+	))
 	speedPoints := (speedDragPoints + speedUpwindPoints + speedDownwindPoints) / 3
 	speedFactor := POINT_ANCHOR - (speedPoints / POINT_DIVIDOR)
 
-	stabilizationPoints := evaluateStabilizationPoints(
+	stabilizationPoints := math.Round(evaluateStabilizationPoints(
 		input.WSA,
 		input.MaxDraft,
 		input.MaxBeam,
@@ -220,17 +222,17 @@ func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 		input.Composition,
 		input.Stabilization,
 		input.Hull,
-	)
+	))
 	stabilizationFactor := POINT_ANCHOR - (stabilizationPoints / POINT_DIVIDOR)
 
-	agilityPoints := evaluateAgilityPoints(
+	agilityPoints := math.Round(evaluateAgilityPoints(
 		input.MaxBeam,
 		input.LOA,
 		input.CrewWeight,
 		input.Displacement,
 		input.Stabilization,
 		input.Hull,
-	)
+	))
 	agilityFactor := POINT_ANCHOR - (agilityPoints / POINT_DIVIDOR)
 
 	tcc := ((speedFactor * SPEED_FACTOR_INFLUENCE) +
@@ -260,10 +262,10 @@ func evaluateDragSpeedPoints(mode MODE, displ, wsa float64) float64 {
 	displVol := displ / 1000 // assuming water is 1000 kg / m3
 	// ratio between the edge length of wsa and displArea.
 	wsaDisplRatio := math.Pow(math.Pow(wsa, 1/2)/math.Pow(displVol, 1/3), 2)
-	// multiply wsa by the mode factor to adjust its influence based on the mode.
-	// this means: low factors (foils) reduces wsa impact, while high factors (displacement) increase the wsa impact.
-	// the reference value 100 inverts the scale, so higher wsa means higher drag and lower points.
-	return (500 - (wsa * wsaDisplRatio * MODE_DRAG_FACTOR[mode])) * DRAG_SPEED_POINT_PATCHER
+
+	impact := (wsa * wsaDisplRatio * MODE_DRAG_FACTOR[mode])
+	// normalize (as more drag == less points) and reverse result into a scale 1.0-2.0
+	return (2.0 - (impact / 20)) * DRAG_SPEED_POINT_PATCHER
 }
 
 // evaluateDownwindSpeedPoints calcs the downwind speed. more points == faster == good
@@ -276,7 +278,9 @@ func evaluateDownwindSpeedPoints(displ, asym, sym float64) float64 {
 	// ratio between the edge length of sailArea and displVol.
 	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
-	return (sailArea * sailDisplRatio) * DOWNWIND_SPEED_POINT_PATCHER
+	impact := (sailArea * sailDisplRatio)
+	// normalize result into a scale 1.0-2.0
+	return (1.0 + impact/(impact+10)) * DOWNWIND_SPEED_POINT_PATCHER
 }
 
 // evaluateUpwindSpeedPoints calcs the upwind speed. more points == faster == good
@@ -290,7 +294,9 @@ func evaluateUpwindSpeedPoints(displ, main, jib, forestay float64) float64 {
 	// ratio between the edge length of sailArea and displVol.
 	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
-	return (sailArea * sailDisplRatio) * UPWIND_SPEED_POINT_PATCHER
+	impact := (sailArea * sailDisplRatio)
+	// normalize result into a scale 1.0-2.0
+	return (1.0 + impact/(impact+10)) * UPWIND_SPEED_POINT_PATCHER
 }
 
 // evaluateStabilizationPoints calcs the boat stabilization. more points == better stabilization == good
