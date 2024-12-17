@@ -32,15 +32,15 @@ const (
 	POINT_DIVIDOR = 100 // number used to convert points to decimal
 	POINT_ANCHOR  = 2   // anchor used to convert points to factor
 
-	SPEED_FACTOR_INFLUENCE         = 1.5  // empirical value specifying how much TCC influence the speed has
-	STABILIZATION_FACTOR_INFLUENCE = 0.75 // empirical value specifying how much TCC influence the stabilization has
-	AGILITY_FACTOR_INFLUENCE       = 0.75 // empirical value specifying how much TCC influence the agility has
+	SPEED_FACTOR_INFLUENCE         = 2   // empirical value specifying how much TCC influence the speed has
+	STABILIZATION_FACTOR_INFLUENCE = 0.5 // empirical value specifying how much TCC influence the stabilization has
+	AGILITY_FACTOR_INFLUENCE       = 0.5 // empirical value specifying how much TCC influence the agility has
 
-	DRAG_SPEED_POINT_PATCHER     = 60  // empirical value to patch the drag speed points
-	UPWIND_SPEED_POINT_PATCHER   = 60  // empirical value to patch the upwind speed points
-	DOWNWIND_SPEED_POINT_PATCHER = 60  // empirical value to patch the downwind speed points
-	STABILIZATION_POINT_PATCHER  = 0.5 // empirical value to patch the stabilization points
-	AGILITY_POINT_PATCHER        = 0.7 // empirical value to patch the agility points
+	DRAG_SPEED_POINT_PATCHER     = 80 // empirical value to patch the drag speed points
+	UPWIND_SPEED_POINT_PATCHER   = 60 // empirical value to patch the upwind speed points
+	DOWNWIND_SPEED_POINT_PATCHER = 60 // empirical value to patch the downwind speed points
+	STABILIZATION_POINT_PATCHER  = 80 // empirical value to patch the stabilization points
+	AGILITY_POINT_PATCHER        = 70 // empirical value to patch the agility points
 )
 
 type MODE int64
@@ -56,8 +56,8 @@ const (
 var MODE_DRAG_FACTOR = map[MODE]float64{
 	MODE_DEFAULT:   0,    // default mode is considered 0 drag - boat does not touch the water.
 	MODE_HYDROFOIL: 0.05, // hydrofoil mode provides optimal drag (nearly 0).
-	MODE_PLANING:   0.5,  // assuming the boats has 50% wsa while planing
-	MODE_SEMI:      0.7,  // assuming the boats has 50% wsa but is not always planing
+	MODE_PLANING:   0.6,  // assuming the boats has 50% wsa while planing
+	MODE_SEMI:      0.8,  // assuming the boats has 50% wsa but is not always planing
 	MODE_DISPLACE:  1,    // boat has 100% wsa as it is not planing
 }
 
@@ -111,7 +111,7 @@ var HULL_STABILIZATION_FACTOR = map[HULL]float64{
 var HULL_AGILITY_FACTOR = map[HULL]float64{
 	HULL_DEFAULT: 1,   // default has perfect agility
 	HULL_MONO:    0.9, // mono hull has nearly perfect agility
-	HULL_MULTI:   0.3, // multi hull has limited agility
+	HULL_MULTI:   0.2, // multi hull has limited agility
 }
 
 type MATERIAL int64
@@ -195,7 +195,6 @@ type EvaluationOutput struct {
 func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 	speedDragPoints := math.Round(evaluateDragSpeedPoints(
 		input.Mode,
-		input.Displacement,
 		input.WSA,
 	))
 	speedUpwindPoints := math.Round(evaluateUpwindSpeedPoints(
@@ -258,14 +257,10 @@ func EvaluateFactor(input *EvaluationInput) (*EvaluationOutput, error) {
 }
 
 // evaluateDragSpeedPoints calcs the drag speed. more points == fewer drag == good
-func evaluateDragSpeedPoints(mode MODE, displ, wsa float64) float64 {
-	displVol := displ / 1000 // assuming water is 1000 kg / m3
-	// ratio between the edge length of wsa and displArea.
-	wsaDisplRatio := math.Pow(math.Pow(wsa, 1/2)/math.Pow(displVol, 1/3), 2)
-
-	impact := (wsa * wsaDisplRatio * MODE_DRAG_FACTOR[mode])
-	// normalize (as more drag == less points) and reverse result into a scale 1.0-2.0
-	return (2.0 - (impact / 20)) * DRAG_SPEED_POINT_PATCHER
+func evaluateDragSpeedPoints(mode MODE, wsa float64) float64 {
+	impact := (math.Sqrt(wsa) * 3.5) * MODE_DRAG_FACTOR[mode]
+	// normalize (as more drag == less points) and reverse result into a scale ~1.0-2.0
+	return (2.0 - (impact / 15)) * DRAG_SPEED_POINT_PATCHER
 }
 
 // evaluateDownwindSpeedPoints calcs the downwind speed. more points == faster == good
@@ -279,7 +274,7 @@ func evaluateDownwindSpeedPoints(displ, asym, sym float64) float64 {
 	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
 	impact := (sailArea * sailDisplRatio)
-	// normalize result into a scale 1.0-2.0
+	// normalize result into a scale ~1.0-2.0
 	return (1.0 + impact/(impact+10)) * DOWNWIND_SPEED_POINT_PATCHER
 }
 
@@ -295,7 +290,7 @@ func evaluateUpwindSpeedPoints(displ, main, jib, forestay float64) float64 {
 	sailDisplRatio := math.Pow(math.Pow(sailArea, 1/2)/math.Pow(displVol, 1/3), 2)
 
 	impact := (sailArea * sailDisplRatio)
-	// normalize result into a scale 1.0-2.0
+	// normalize result into a scale ~1.0-2.0
 	return (1.0 + impact/(impact+10)) * UPWIND_SPEED_POINT_PATCHER
 }
 
@@ -324,7 +319,9 @@ func evaluateStabilizationPoints(wsa, draft, beam, loa, displ, main float64, mat
 	}
 	ballastFactor := (ballastPercentage * STABILIZATION_STABILIZATION_FACTOR[stabilization]) / 100
 
-	return basicStabilizationPoints * HULL_STABILIZATION_FACTOR[hull] * ballastFactor * STABILIZATION_POINT_PATCHER
+	impact := basicStabilizationPoints * HULL_STABILIZATION_FACTOR[hull] * ballastFactor
+	// normalize result into a scale ~1.0-2.0
+	return (1.0 + impact*3) * STABILIZATION_POINT_PATCHER
 }
 
 // evaluateAgilityPoints calcs the boat agility. more points == better agility == good
@@ -339,5 +336,7 @@ func evaluateAgilityPoints(beam, loa, crew, displ float64, stabilization STABILI
 	basicAgility := beamLoaDiff * crewDisplRatio
 
 	// loa is mixed in here because in general longer ships have
-	return basicAgility * HULL_AGILITY_FACTOR[hull] * STABILIZATION_AGILITY_FACTOR[stabilization] * AGILITY_POINT_PATCHER
+	impact := basicAgility * HULL_AGILITY_FACTOR[hull] * STABILIZATION_AGILITY_FACTOR[stabilization]
+	// normalize result into a scale ~1.0-2.0
+	return (1.0 + impact*1.8) * AGILITY_POINT_PATCHER
 }
