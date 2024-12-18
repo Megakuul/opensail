@@ -1,11 +1,11 @@
-name: Validate and tag register request
+name: Validate register request
 on: 
   pull_request:
     paths:
       - "register/**"
 
 jobs:
-  validate-and-tag:
+  validate:
     runs-on: ubuntu-latest
     permissions:
       contents: read

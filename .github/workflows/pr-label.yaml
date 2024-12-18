@@ -1,8 +1,10 @@
-name: Validate and tag application pull request
-on: [pull_request]
+name: Tag application pull request
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  validate-and-tag:
+  tag:
     runs-on: ubuntu-latest
     permissions:
       contents: read

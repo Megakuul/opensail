@@ -1,7 +1,9 @@
 # Opensail
 
-Free and Opensource platform providing sailing services, including the Openfactor Rating System.
+Free and Opensource Regatta Rating System
+---
 
+Opensail is a fully transparent revision controlled regatta yacht database using a predictable and deterministic handicap factor.
 
 ### Registration
 
