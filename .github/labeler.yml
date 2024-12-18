@@ -1,0 +1,21 @@
+needs-review:
+- changed-files:
+  - any-glob-to-any-file: '**'
+
+docs:
+- changed-files:
+  - any-glob-to-any-file: '**/*.md'
+
+register:
+- all:
+  - changed-files:
+    - any-glob-to-any-file: 'register/**/*'
+    - all-globs-to-all-files: 'register/README.md'
+ 
+engine:
+- changed-files:
+  - any-glob-to-any-file: 'engine/**/*'
+
+openfactor:
+- changed-files:
+  - any-glob-to-any-file: 'openfactor/**/*'
