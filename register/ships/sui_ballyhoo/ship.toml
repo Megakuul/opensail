@@ -1,5 +1,5 @@
 # Specifies the team identifier of the team currently sailing this boat.
-team = ""
+team = "example"
 
 # Info defines general information about the boat. This information does not influence rating.
 [info]
