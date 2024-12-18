@@ -1,6 +1,6 @@
 <script>
   import Logo from "$lib/components/Logo.svelte";
-    import Icon from "@iconify/svelte";
+  import Icon from "@iconify/svelte";
 </script>
 
 <svelte:head>
@@ -20,6 +20,17 @@
 	<section class="flex flex-col items-start mx-6">
 		<h1 class="text-4xl sm:text-8xl font-bold text-slate-100/70 select-none">Opensail</h1>
 		<h2 class="text-xl sm:text-4xl text-slate-100/50 ml-4 sm:ml-32 select-none">Your Comprehensive Regatta Rating System</h2>
+	</section>
+
+	<section class="flex flex-row gap-8 justify-around items-center w-10/12 sm:w-6/12">
+		<a href="/ships" class="flex flex-row items-center justify-center gap-2 w-1/2 p-2 rounded-lg transition-all duration-700 text-slate-100/60 bg-slate-400/20 hover:bg-slate-400/10">
+			<span class="font-bold text-lg sm:text-xl">Ships</span>
+			<Icon icon="line-md:external-link" width="24" height="24" />
+		</a>
+		<a href="/teams" class="flex flex-row items-center justify-center gap-2 w-1/2 p-2 rounded-lg transition-all duration-700 text-slate-100/60 bg-slate-400/20 hover:bg-slate-400/10">
+			<span class="font-bold text-lg sm:text-xl">Teams</span>
+			<Icon icon="line-md:external-link" width="24" height="24" />
+		</a>
 	</section>
 
 	<section class="relative flex flex-col gap-4 mx-4 p-4 mt-0 lg:mt-20 max-w-[1100px] text-slate-100/60 text-xs sm:text-xl text-justify">

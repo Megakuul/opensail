@@ -1,6 +1,9 @@
 # Opensail
 
-Free and Opensource platform providing sailing services, including the Opensail Rating System.
+Free and Opensource platform providing sailing services, including the Openfactor Rating System.
+
+
+### Registration
 
 
 ### Development
@@ -22,4 +25,4 @@ The **engine** is essentially a replacement for common ci scripts. Due to the co
 Static configuration options are provided via vite environment variables (defaults defined in `.env`).
 
 > [!NOTE]
-> Notice that the project structure does not follow any best practice and is specifically designed to fit this use case.
+> Notice that neither project structure nor coding style follows any best practice. The application is specifically designed to fit this use case.
