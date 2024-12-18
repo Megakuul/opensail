@@ -9,8 +9,6 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    permissions:
-      pull-request: write
     steps:
       - name: label pull request
         uses: actions/labeler@v5
