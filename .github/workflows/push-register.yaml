@@ -31,7 +31,7 @@ jobs:
 
       - name: generate version file
         run: |
-          jq '. += ["${{ steps.tag_version.outputs.new_tag }}"]' ./src/static/api/versions.json > /tmp/opensail/versions.json
+          jq '. += ["${{ steps.tag_version.outputs.new_tag }}"]' ./static/api/versions.json > /tmp/opensail/versions.json
 
       - name: bump version and push tag
         id: tag_version
@@ -48,9 +48,9 @@ jobs:
 
       - name: commit api data
         run: |
-          mkdir -p ./src/static/api/${{ steps.tag_version.outputs.new_tag }}
-          mv /tmp/opensail/data/* ./src/static/api/${{ steps.tag_version.outputs.new_tag }}
-          mv /tmp/opensail/versions.json ./src/static/api/versions.json
+          mkdir -p ./static/api/${{ steps.tag_version.outputs.new_tag }}
+          mv /tmp/opensail/data/* ./static/api/${{ steps.tag_version.outputs.new_tag }}
+          mv /tmp/opensail/versions.json ./static/api/versions.json
 
           git config --global user.name "Github Actions"
           git config --global user.email "actions@github.com"
