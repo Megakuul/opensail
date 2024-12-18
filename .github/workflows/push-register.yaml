@@ -41,9 +41,13 @@ jobs:
           WITH_V: true
           DEFAULT_BUMP: patch
 
+      - name: fetch bumped tags
+        run: git fetch --tags
+
       - name: push versioned release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
           files: /tmp/out/*
 
       - name: commit api data
