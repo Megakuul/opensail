@@ -8,6 +8,9 @@ jobs:
   validate-and-tag:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
+      pull-requests: write
+    permissions:
       pull-request: write
     steps:
       - name: label pull request
