@@ -21,7 +21,7 @@ export function CreateVersions() {
       }
       try {
         versionsException = "";
-        versions = await FetchVersions();
+        versions = (await FetchVersions()).reverse();
         latest = versions.length > 0 ? versions[0] : "";
       } catch (/** @type {any} */ err) {
         versionsException = err.message;
