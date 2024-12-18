@@ -2,7 +2,7 @@
 [design]
 # Mode specifies the type of the hull design/mode [displace; semi; planing; hydrofoil;]
 mode = "semi"
-# Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; keel;]
+# Stabilization specifies the method used to stabilize the ship [foils; centreboard; daggerboard; finkeel; bulbkeel; fullkeel;]
 stabilization = "daggerboard"
 # Hull specifies the hull type [mono; multi;]
 hull = "multi"

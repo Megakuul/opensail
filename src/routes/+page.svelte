@@ -59,7 +59,7 @@
 				<center class="my-3 animate-pulse">
 					<Icon icon="icon-park-twotone:sailing" width="180" height="180" />
 				</center>
-				<a href="https://github.com/Megakuul/opensail/blob/main/register/README.md" class="w-full block p-2 rounded-lg bg-slate-400/20 hover:bg-slate-400/10 transition-all duration-700">
+				<a href="https://github.com/Megakuul/opensail/blob/main/REGISTER.md" class="w-full block p-2 rounded-lg bg-slate-400/20 hover:bg-slate-400/10 transition-all duration-700">
 					Register your Ship
 				</a>
 			</div>
@@ -75,7 +75,7 @@
 				<center class="my-3 animate-pulse">
 					<Icon icon="fluent:people-team-16-regular" width="180" height="180" />
 				</center>
-				<a href="https://github.com/Megakuul/opensail/blob/main/register/README.md" class="w-full block p-2 rounded-lg bg-slate-400/20 hover:bg-slate-400/10 transition-all duration-700">
+				<a href="https://github.com/Megakuul/opensail/blob/main/REGISTER.md" class="w-full block p-2 rounded-lg bg-slate-400/20 hover:bg-slate-400/10 transition-all duration-700">
 					Register your Crew
 				</a>
 			</div>

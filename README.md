@@ -1,17 +1,16 @@
 # Opensail
 
-![Opensail Icon](/static/favicon_large.png)
-
 Free and Opensource Regatta Rating System
----
+
+![Opensail Icon](/static/favicon.png)
 
 Opensail is a transparent, revision-controlled regatta yacht database offering a predictable and deterministic factor for handicap regattas.
 
 
-All data is stored in this repository and managed through the github ecosystem. Hosting and deployment are provided by the [battleshiper]("https://battleshiper.dev") platform.
+All data is stored in this repository and managed through the github ecosystem. Hosting and deployment are provided by the [battleshiper](https://battleshiper.dev) platform.
 
 
-For ship owners that want to register or updater their sailing crew or regatta vessel, see [registration]("REGISTER.md").
+For ship owners that want to register or updater their sailing crew or regatta vessel, see [registration](/REGISTER.md).
 
 
 If you have suggestions, feature requests, or encounter any issues, feel free to open a github issue or contact us at [contact@osail.ch](mailto:contact@osail.ch).
@@ -54,9 +53,7 @@ The **engine** is essentially a replacement for common ci scripts. Due to the co
 **openfactor** is a go package containing the code to calculate the opensail openfactor. The package is used by the engine itself, but is abstracted into a separate module.
 
 
-**web dashboard** is a sveltekit app providing the opensail dashboard. The dashboard is fully independent, all opensail data (ships, teams, etc.) is fetched directly from the latest opensail github release.
-
-Static configuration options are provided via vite environment variables (defaults defined in `.env`).
+**web dashboard** is a sveltekit app providing the opensail dashboard. All raw data (ships, teams, etc.) is inserted into the `static/api/` by the ci engine, this means the data is treated as static assets of the web app and therefore served via the underlying battleshiper cdn.
 
 > [!NOTE]
 > Notice that neither project structure nor coding style follows any best practice. The application is specifically designed to fit this use case.

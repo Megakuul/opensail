@@ -22,7 +22,7 @@ package input
 // ShipConfig specifies the toml representation of the ship configuration.
 type ShipConfig struct {
 	// Team specifies the team identifier currently sailing this boat
-	Team string `toml:"team" validate:"required"`
+	Team string `toml:"team"`
 	// Info contains general boat information that doesn't influence rating
 	Info ShipConfigInfo `toml:"info" validate:"required"`
 	// BaseSpec contains boat dimensions and measurements used for rating
